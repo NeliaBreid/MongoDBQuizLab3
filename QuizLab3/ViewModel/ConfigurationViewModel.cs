@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace QuizLab3.ViewModel
 {/// <summary>
-/// /
+/// //
 /// </summary>
     class ConfigurationViewModel : ViewModelBase
     {
