@@ -1,0 +1,40 @@
+﻿<Window x:Class="QuizLab3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuizLab3" xmlns:view="clr-namespace:QuizLab3.Views" xmlns:viewmodel="clr-namespace:QuizLab3.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        Icon="icon/kahoot.ico"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
+        
+        Title="NeliasKahoot" MinHeight="450" MinWidth="650" ResizeMode="CanResize" Height="450" Width="650">
+    
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
+    
+    <Window.InputBindings>
+        <KeyBinding Key="U" Modifiers="Ctrl"  Command="{Binding ConfigurationViewModel.DeleteQuestionPacksCommand}"/>
+        <KeyBinding Key="P" Modifiers="Ctrl"  Command="{Binding ShowPlayerViewCommand}"/>
+        <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding ShowConfigurationViewCommand}"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding PackOptionsDialog}"/>
+        <KeyBinding Key="Enter" Modifiers="Alt" Command="{Binding FullScreenCommand}"/>
+        <KeyBinding Key="Insert" Command="{Binding ConfigurationViewModel.AddQuestionsCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding ConfigurationViewModel.RemoveQuestionsCommand}"/>
+    </Window.InputBindings>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <view:MenuView Grid.Row="0" DataContext="{Binding}"/>
+        
+        <view:ConfigurationView Grid.Row="1"  Visibility="{Binding DataContext.IsConfigurationMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}" />
+       
+        <view:PlayerView Grid.Row="1"  Visibility="{Binding DataContext.IsPlayerMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+    </Grid>
+</Window>

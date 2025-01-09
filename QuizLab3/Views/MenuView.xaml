@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="QuizLab3.Views.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuizLab3.Views"
+             xmlns:fa="clr-namespace:FontAwesome.Sharp;assembly=FontAwesome.Sharp" xmlns:viewmodel="clr-namespace:QuizLab3.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Menu VerticalAlignment="Top" >
+            <MenuItem Header="File" >
+                
+                <MenuItem Header="New Question Pack" Icon="{fa:Icon folderplus}" Command="{Binding NewPackDialog}">
+                </MenuItem>
+                <MenuItem Header="Select Question Pack" Icon="{fa:Icon FolderOpen}">
+                    <MenuItem.ItemsSource>
+                        <Binding Path="Packs"/>
+                    </MenuItem.ItemsSource>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}" />
+                            <Setter Property="Command" Value="{Binding DataContext.SetActivePackCommand, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+
+                <MenuItem Header="Delete Question Pack" 
+                          Icon="{fa:Icon Trash}" 
+                          Command="{Binding ConfigurationViewModel.DeleteQuestionPacksCommand}"
+                          InputGestureText="Ctrl+U"/>
+
+                <Separator/>
+
+                <MenuItem Header="Exit" 
+                          Icon="{fa:Icon times}" 
+                          InputGestureText="Alt+F4" 
+                          Click="MenuItem_Click"/>
+
+            </MenuItem>
+            <MenuItem Header="Edit">
+
+                <MenuItem Header="Add Question" 
+                          Icon="{fa:Icon Plus}" 
+                          DataContext="{Binding ConfigurationViewModel}" 
+                          Command="{Binding AddQuestionsCommand}"
+                          InputGestureText="Insert"/>
+
+                <MenuItem Header="Remove Question" 
+                          Icon="{fa:Icon Minus}" 
+                          DataContext="{Binding ConfigurationViewModel}" 
+                          Command="{Binding RemoveQuestionsCommand}"
+                          InputGestureText="Delete"/>
+
+                <MenuItem Header="Pack Options" 
+                          Icon="{fa:Icon Sliders}" 
+                          Command="{Binding PackOptionsDialog}" 
+                          InputGestureText="Ctrl+O"/>
+            </MenuItem>
+
+            <MenuItem Header="View">
+                <MenuItem Header="Play" 
+                          Icon="{fa:Icon Play}" 
+                          Command="{Binding ShowPlayerViewCommand}" 
+                          InputGestureText="Ctrl+P" />
+
+                <MenuItem Header="Edit" 
+                          Icon="{fa:Icon Pen}"  
+                          Command="{Binding ShowConfigurationViewCommand}" 
+                          InputGestureText="Ctrl+E"/>
+
+                <Separator/>
+
+                <MenuItem Header="FullScreen" 
+                          Icon="{fa:Icon Expand}" 
+                          Command="{Binding FullScreenCommand}" 
+                          InputGestureText="Alt+Enter"/>
+            </MenuItem>
+        </Menu>
+    </Grid>
+</UserControl>

@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="QuizLab3.Views.PlayerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuizLab3.Views" 
+             xmlns:viewmodel="clr-namespace:QuizLab3.ViewModel"
+             mc:Ignorable="d" 
+             DataContext="{Binding PlayerViewModel}"
+             d:DesignHeight="450" d:DesignWidth="650">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="207*"/>
+            <ColumnDefinition Width="193*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label VerticalAlignment="Top"
+               HorizontalAlignment="Right" 
+               FontSize="35" 
+               Grid.Column="1" 
+               Margin="0,10,10,0" 
+               Content="{Binding TimeRemainingDisplay,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Height="89" Grid.ColumnSpan="2" Margin="50 80 50 50" Width="419">
+            <TextBlock HorizontalAlignment="Center" FontSize="30" Text="{Binding CurrentQuestion.Query}"></TextBlock>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Question "/>
+                <TextBlock Text="{Binding CurrentQuestionIndex, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                <TextBlock Text=" out of "/>
+                <TextBlock Text="{Binding TotalQuestions}"></TextBlock>
+                
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Correct Questions: "/>
+                <TextBlock Text="{Binding CountCorrectAnswers, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Margin="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.ColumnSpan="2" Width="442">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent1}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent1}"></Button>
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent2}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent2}"></Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent3}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent3}"></Button>
+
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent4}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent4}"/> 
+            </StackPanel>
+        </StackPanel>
+        
+    </Grid>
+</UserControl>
