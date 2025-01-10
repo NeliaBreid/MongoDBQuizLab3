@@ -1,13 +1,6 @@
 ﻿using ListShuffle;
 using QuizLab3.Command;
 using QuizLab3.Model;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Threading;
 
 namespace QuizLab3.ViewModel
@@ -25,6 +18,8 @@ namespace QuizLab3.ViewModel
 
         public DispatcherTimer _timer;
 
+        private bool _areAnswerButtonsEnabled = true;
+
         private int _timeRemaining;
 
         private int _totalQuestions;
@@ -34,7 +29,16 @@ namespace QuizLab3.ViewModel
         private Question _currentQuestion; 
 
         private readonly MainWindowViewModel? _mainWindowViewModel;
-
+        public bool AreAnswerButtonsEnabled
+        {
+            get => _areAnswerButtonsEnabled;
+            set
+            {
+                _areAnswerButtonsEnabled = value;
+                RaisePropertyChanged(nameof(AreAnswerButtonsEnabled));
+                AnswerButtonCommand.RaiseCanExecuteChanged();  // Refresh button state
+            }
+        }
         public string TimeRemainingDisplay
         {
             get
@@ -104,7 +108,7 @@ namespace QuizLab3.ViewModel
             _timer.Interval = TimeSpan.FromSeconds(1); 
             _timer.Tick += Timer_Tick;               
             CurrentQuestionIndex = 0; 
-            AnswerButtonCommand = new DelegateCommand(SetAnswerButton);
+            AnswerButtonCommand = new DelegateCommand(SetAnswerButton, CanAnswerButtonExecute);
             CountCorrectAnswers = 0;
         }
 
@@ -115,15 +119,19 @@ namespace QuizLab3.ViewModel
             {
                 TimeRemaining--;
             }
-            else if(TimeRemaining == 0 && CurrentQuestionIndex == TotalQuestions && CurrentQuestionIndex != 0)
+            else
             {
-                _mainWindowViewModel?.ShowResultView();
+                EndGame();
             }
-            else if (CurrentQuestionIndex != TotalQuestions)
-            {
-                NextQuestion();
-                TimeRemaining = ActivePack?.TimeLimitInSeconds ?? 0;
-            }
+            //else if(TimeRemaining == 0 && CurrentQuestionIndex == TotalQuestions && CurrentQuestionIndex != 0)
+            //{
+            //    _mainWindowViewModel?.ShowResultView();
+            //}
+            //else if (CurrentQuestionIndex != TotalQuestions)
+            //{
+            //    NextQuestion();
+            //    TimeRemaining = ActivePack?.TimeLimitInSeconds ?? 0;
+            //}
         }
 
         public void ShuffleQuestions()
@@ -170,8 +178,9 @@ namespace QuizLab3.ViewModel
             }
             else if(CurrentQuestionIndex == TotalQuestions)
             {
-                _mainWindowViewModel.ShowResultView();
-                GameReset();
+                EndGame();
+                //_mainWindowViewModel.ShowResultView();
+                //GameReset();
             }
             else
             {
@@ -181,28 +190,41 @@ namespace QuizLab3.ViewModel
         private async void SetAnswerButton(object? obj)
         {
             UpdateButtonContent(CurrentQuestion.CorrectAnswer, "Correct!");
+            AreAnswerButtonsEnabled = false;
 
             if (obj is not string selectedAnswer)
                 return;
 
-        
             if (selectedAnswer == CurrentQuestion.CorrectAnswer)
             {
                 UpdateButtonContent(selectedAnswer, "Correct!");
                 CountCorrectAnswers++;
-                await Task.Delay(2000);
                 RaisePropertyChanged(nameof(CountCorrectAnswers));
             }
             else
             {
                 UpdateButtonContent(selectedAnswer, "Incorrect!");
-                await Task.Delay(2000);
             }
-            NextQuestion();
-        }
-       
+          
+            await Task.Delay(2000);
 
-            public void StartGame()
+            if (CurrentQuestionIndex < TotalQuestions)
+            {
+                NextQuestion();
+                AreAnswerButtonsEnabled = true;  
+            }
+            else
+            {
+                EndGame();
+            }
+        }
+        private bool CanAnswerButtonExecute(object? obj)
+        {
+            return AreAnswerButtonsEnabled;
+        }
+
+
+        public void StartGame()
         {
             _currentQuestionIndex = 0;
 
@@ -210,6 +232,7 @@ namespace QuizLab3.ViewModel
             ShuffleAnswers();
 
             TimeRemaining = ActivePack?.TimeLimitInSeconds ?? 0;
+            AreAnswerButtonsEnabled = true; //
             _timer.Start();
         }
 
@@ -225,6 +248,12 @@ namespace QuizLab3.ViewModel
 
             RaisePropertyChanged(nameof(CurrentQuestionIndex));
             RaisePropertyChanged(nameof(CountCorrectAnswers));
+        }
+        private void EndGame()
+        {
+            _timer.Stop();
+            AreAnswerButtonsEnabled = false;  // Disable buttons
+            _mainWindowViewModel?.ShowResultView();
         }
 
         public void SetAnswers()
@@ -243,19 +272,19 @@ namespace QuizLab3.ViewModel
         {
             if (AnswerContent1 == answer)
             {
-                AnswerContent1 = feedback;
+                AnswerContent1 = $"{feedback}\n{AnswerContent1}";
             }
             if (AnswerContent2 == answer)
             {
-                AnswerContent2 = feedback;
+                AnswerContent2 = $"{feedback}\n{AnswerContent2}";
             }
             if (AnswerContent3 == answer)
             {
-                AnswerContent3 = feedback;
+                AnswerContent3 = $"{feedback}\n{AnswerContent3}";
             }
             if (AnswerContent4 == answer)
             {
-                AnswerContent4 = feedback;
+                AnswerContent4 = $"{feedback}\n{AnswerContent4}";
             }
 
             RaisePropertyChanged(nameof(AnswerContent1));

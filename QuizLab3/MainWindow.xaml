@@ -19,6 +19,7 @@
         <KeyBinding Key="P" Modifiers="Ctrl"  Command="{Binding ShowPlayerViewCommand}"/>
         <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding ShowConfigurationViewCommand}"/>
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding PackOptionsDialog}"/>
+        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding EditCategoryDialog}"/>
         <KeyBinding Key="Enter" Modifiers="Alt" Command="{Binding FullScreenCommand}"/>
         <KeyBinding Key="Insert" Command="{Binding ConfigurationViewModel.AddQuestionsCommand}"/>
         <KeyBinding Key="Delete" Command="{Binding ConfigurationViewModel.RemoveQuestionsCommand}"/>
@@ -35,6 +36,7 @@
         <view:ConfigurationView Grid.Row="1"  Visibility="{Binding DataContext.IsConfigurationMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}" />
        
         <view:PlayerView Grid.Row="1"  Visibility="{Binding DataContext.IsPlayerMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+       
 
     </Grid>
 </Window>

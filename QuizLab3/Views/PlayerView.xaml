@@ -40,14 +40,13 @@
 
         <StackPanel Orientation="Vertical" Margin="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.ColumnSpan="2" Width="442">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent1}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent1}"></Button>
-                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent2}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent2}"></Button>
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent1}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent1}" IsEnabled="{Binding AreAnswerButtonsEnabled}"></Button>
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent2}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent2}" IsEnabled="{Binding AreAnswerButtonsEnabled}"></Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent3}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent3}"></Button>
-
-                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent4}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent4}"/> 
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent3}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent3}" IsEnabled="{Binding AreAnswerButtonsEnabled}"></Button>
+                <Button Margin="10" Width="200" Height="60" Content="{Binding AnswerContent4}" Command="{Binding AnswerButtonCommand}" CommandParameter="{Binding AnswerContent4}" IsEnabled="{Binding AreAnswerButtonsEnabled}"/> 
             </StackPanel>
         </StackPanel>
         

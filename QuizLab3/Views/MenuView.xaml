@@ -8,20 +8,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Menu VerticalAlignment="Top" >
-            <MenuItem Header="File" >
+        <Menu VerticalAlignment="Top" Background="Lavender">
+            <MenuItem Header="File">
                 
-                <MenuItem Header="New Question Pack" Icon="{fa:Icon folderplus}" Command="{Binding NewPackDialog}">
+                <MenuItem Header="New Question Pack" Icon="{fa:Icon folderplus}" Command="{Binding NewPackDialog}" Background="Lavender">
                 </MenuItem>
-                <MenuItem Header="Select Question Pack" Icon="{fa:Icon FolderOpen}">
-                    <MenuItem.ItemsSource>
+                <MenuItem Header="Select Question Pack" Icon="{fa:Icon FolderOpen}" Background="Lavender">
+                    <MenuItem.ItemsSource >
                         <Binding Path="Packs"/>
                     </MenuItem.ItemsSource>
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Name}" />
+                            <Setter Property="Header" Value="{Binding Name}"/>
                             <Setter Property="Command" Value="{Binding DataContext.SetActivePackCommand, RelativeSource={RelativeSource AncestorType=Window}}" />
                             <Setter Property="CommandParameter" Value="{Binding}"/>
+                            <Setter Property="Background" Value="Lavender"/>
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
@@ -29,14 +30,16 @@
                 <MenuItem Header="Delete Question Pack" 
                           Icon="{fa:Icon Trash}" 
                           Command="{Binding ConfigurationViewModel.DeleteQuestionPacksCommand}"
-                          InputGestureText="Ctrl+U"/>
+                          InputGestureText="Ctrl+U"
+                          Background="Lavender"/>
 
                 <Separator/>
 
                 <MenuItem Header="Exit" 
                           Icon="{fa:Icon times}" 
                           InputGestureText="Alt+F4" 
-                          Click="MenuItem_Click"/>
+                          Click="MenuItem_Click"
+                          Background="Lavender"/>
 
             </MenuItem>
             <MenuItem Header="Edit">
@@ -45,37 +48,49 @@
                           Icon="{fa:Icon Plus}" 
                           DataContext="{Binding ConfigurationViewModel}" 
                           Command="{Binding AddQuestionsCommand}"
-                          InputGestureText="Insert"/>
+                          InputGestureText="Insert"
+                          Background="Lavender"/>
 
                 <MenuItem Header="Remove Question" 
                           Icon="{fa:Icon Minus}" 
                           DataContext="{Binding ConfigurationViewModel}" 
                           Command="{Binding RemoveQuestionsCommand}"
-                          InputGestureText="Delete"/>
+                          InputGestureText="Delete"
+                          Background="Lavender"/>
 
                 <MenuItem Header="Pack Options" 
                           Icon="{fa:Icon Sliders}" 
                           Command="{Binding PackOptionsDialog}" 
-                          InputGestureText="Ctrl+O"/>
+                          InputGestureText="Ctrl+O"
+                          Background="Lavender"/>
+                
+                <MenuItem Header="Edit Categories" 
+                          Icon="{fa:Icon PenFancy}" 
+                          Command="{Binding EditCategoryDialog}" 
+                          InputGestureText="Ctrl+Y"
+                          Background="Lavender"/>
             </MenuItem>
 
             <MenuItem Header="View">
                 <MenuItem Header="Play" 
                           Icon="{fa:Icon Play}" 
                           Command="{Binding ShowPlayerViewCommand}" 
-                          InputGestureText="Ctrl+P" />
+                          InputGestureText="Ctrl+P" 
+                          Background="Lavender"/>
 
                 <MenuItem Header="Edit" 
                           Icon="{fa:Icon Pen}"  
                           Command="{Binding ShowConfigurationViewCommand}" 
-                          InputGestureText="Ctrl+E"/>
+                          InputGestureText="Ctrl+E"
+                          Background="Lavender"/>
 
                 <Separator/>
 
                 <MenuItem Header="FullScreen" 
                           Icon="{fa:Icon Expand}" 
                           Command="{Binding FullScreenCommand}" 
-                          InputGestureText="Alt+Enter"/>
+                          InputGestureText="Alt+Enter"
+                          Background="Lavender"/>
             </MenuItem>
         </Menu>
     </Grid>

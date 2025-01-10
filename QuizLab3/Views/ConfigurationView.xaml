@@ -26,12 +26,23 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right">
             <Button 
+              FontSize="15"
+              Width="18" 
+              Height="18" 
+              Margin="5 0 0 0"  
+              ToolTip="Edit Categories"
+              Command="{Binding DataContext.EditCategoryDialog, RelativeSource={RelativeSource AncestorType=Window}}"
+              Background="Lavender">
+                <fa:IconBlock Icon="PenFancy" Foreground="Black"/>
+            </Button>
+            <Button 
                 FontSize="15"
                 Width="18" 
                 Height="18" 
                 Margin="5 0 0 0"  
                 ToolTip="Pack Options"
-                Command="{Binding DataContext.PackOptionsDialog, RelativeSource={RelativeSource AncestorType=Window}}">
+                Command="{Binding DataContext.PackOptionsDialog, RelativeSource={RelativeSource AncestorType=Window}}"
+                Background="Lavender">
                 <fa:IconBlock Icon="Sliders" Foreground="Black"/>
             </Button>
 
@@ -41,7 +52,8 @@
                 Height="18" 
                 Margin="5 0 0 0" 
                 ToolTip="Add Question"
-                Command= "{Binding AddQuestionsCommand}">
+                Command= "{Binding AddQuestionsCommand}"
+                Background="Lavender">
                 <fa:IconBlock Icon="Plus" Foreground="Green"/>
             </Button>
 
@@ -51,7 +63,8 @@
                 Height="18" 
                 Margin="5 0 0 0" 
                 ToolTip="Remove Question"
-                Command="{Binding RemoveQuestionsCommand}">
+                Command="{Binding RemoveQuestionsCommand}"
+                Background="Lavender">
                 <fa:IconBlock Icon="Minus" Foreground="Black"/>
             </Button>
         

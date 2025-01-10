@@ -1,17 +1,5 @@
-﻿using QuizLab3.Command;
-using QuizLab3.Model;
-using System;
-using System.Collections.Generic;
+﻿using QuizLab3.Model;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO.Packaging;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace QuizLab3.ViewModel
 {

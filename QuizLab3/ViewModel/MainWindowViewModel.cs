@@ -1,24 +1,9 @@
-﻿using ListShuffle;
-using QuizLab3.Command;
+﻿using QuizLab3.Command;
 using QuizLab3.Dialogs;
 using QuizLab3.Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace QuizLab3.ViewModel
 {
@@ -34,6 +19,7 @@ namespace QuizLab3.ViewModel
 
         private bool _isPlayerMode = false;
 
+
         private bool _isConfigurationMode = true; 
 
         public QuestionPackViewModel? ActivePack
@@ -44,6 +30,7 @@ namespace QuizLab3.ViewModel
                 _activePack = value;
                 RaisePropertyChanged(nameof(ActivePack));
                 ConfigurationViewModel?.RaisePropertyChanged();
+
             }
         }
         public bool IsConfigurationMode
@@ -65,12 +52,13 @@ namespace QuizLab3.ViewModel
                 _isPlayerMode = value;
                 RaisePropertyChanged(nameof(IsConfigurationMode));
                 RaisePropertyChanged(nameof(IsPlayerMode));
-               
+
             }
         }
  
         public DelegateCommand NewPackDialog { get; }
         public DelegateCommand PackOptionsDialog { get; }
+        public DelegateCommand EditCategoryDialog { get; }
         public DelegateCommand SetActivePackCommand { get; }
         public DelegateCommand ShowConfigurationViewCommand { get; }
         public DelegateCommand ShowPlayerViewCommand { get; }
@@ -88,14 +76,18 @@ namespace QuizLab3.ViewModel
 
             PackOptionsDialog = new DelegateCommand(OpenPackOptionsDialog);
 
+            EditCategoryDialog = new DelegateCommand(OpenCategoryDialog);
+
             SetActivePackCommand = new DelegateCommand(SetActivePack);
 
-            ShowConfigurationViewCommand = new DelegateCommand(ShowConfigurationView);
+            ShowConfigurationViewCommand = new DelegateCommand(ShowConfigurationView, CanConfigurationView);
 
             ShowPlayerViewCommand = new DelegateCommand(ShowPlayerView, CanShowPlayerView);
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
+
         }
+
 
         private void OpenNewPackDialog(object obj)
         {
@@ -108,10 +100,16 @@ namespace QuizLab3.ViewModel
 
         private void OpenPackOptionsDialog(object? obj)
         {
-            ConfigurationViewModel.NewQuestionPack = new QuestionPack(" ");
+            //ConfigurationViewModel.NewQuestionPack = new QuestionPack(" ");
             PackOptionsDialog newPackOptionsDialog = new PackOptionsDialog();
 
             newPackOptionsDialog.ShowDialog();
+        }
+
+        private void OpenCategoryDialog(object? obj)
+        {
+            EditCategoryDialog editCategoryDialog = new EditCategoryDialog();
+            editCategoryDialog.ShowDialog();
         }
         private void SetActivePack(object? obj)
         {
@@ -119,12 +117,18 @@ namespace QuizLab3.ViewModel
 
             RaisePropertyChanged(nameof(ActivePack));
         }
+        private bool CanConfigurationView(object? arg)
+        {
+            return _isPlayerMode;
+        }
         private void ShowConfigurationView(object? obj)
         {
             IsConfigurationMode = true;
             IsPlayerMode = false;
 
             PlayerViewModel.GameReset();
+            ShowConfigurationViewCommand.RaiseCanExecuteChanged();
+            ShowPlayerViewCommand.RaiseCanExecuteChanged();
         }
       
         private void ShowPlayerView(object? obj)
@@ -133,10 +137,12 @@ namespace QuizLab3.ViewModel
             IsPlayerMode = true;
 
             PlayerViewModel.StartGame();
+            ShowConfigurationViewCommand.RaiseCanExecuteChanged();
+            ShowPlayerViewCommand.RaiseCanExecuteChanged();
         }
         private bool CanShowPlayerView(object? arg)
         {
-            return ActivePack.Questions.Any();
+            return !_isPlayerMode && ActivePack.Questions.Any();
         }
 
         private void SetFullScreen(object? obj)

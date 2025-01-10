@@ -1,15 +1,6 @@
 ﻿using QuizLab3.Command;
 using QuizLab3.Model;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace QuizLab3.ViewModel
 {/// <summary>
