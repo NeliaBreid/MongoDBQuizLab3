@@ -8,7 +8,7 @@
         xmlns:model="clr-namespace:QuizLab3.Model"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="New QuestionPack" Height="320" Width="260" ResizeMode="NoResize">
+        Title="New QuestionPack" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="DifficultyValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -28,7 +28,7 @@
             </ComboBox>
             
             <Label Content="Category" FontWeight="Bold"/>
-            <ComboBox Margin="5 0 5 10" DataContext="{Binding ConfigurationViewModel}">
+            <ComboBox Margin="5 0 5 10" DataContext="{Binding ConfigurationViewModel}" SelectedItem="{Binding NewQuestionPack.Category}">
             </ComboBox>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -50,8 +50,8 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Cancel" Margin="20" HorizontalAlignment="left" Click="Button_Click_1"/>
-                <Button Content="Create" Margin="20" HorizontalAlignment="Right"  DataContext="{Binding ConfigurationViewModel}" Command="{Binding CreateQuestionPacksCommand}" Click="Button_Click"/>
+                <Button Content="Cancel" Margin="10" HorizontalAlignment="left" Click="Button_Click_1"/>
+                <Button Content="Create" Margin="10" HorizontalAlignment="Right"  DataContext="{Binding ConfigurationViewModel}" Command="{Binding CreateQuestionPacksCommand}" Click="Button_Click"/>
             </StackPanel>
 
         </StackPanel>

@@ -9,7 +9,7 @@
         xmlns:model="clr-namespace:QuizLab3.Model"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Pack Options" Height="320" Width="260" ResizeMode="NoResize">
+        Title="Pack Options" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="DifficultyValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -32,7 +32,8 @@
             </ComboBox>
             
             <Label Content="Category" FontWeight="Bold"/>
-            <ComboBox Margin="5 0 5 10">
+            <ComboBox Margin="5 0 5 10"
+                      SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             </ComboBox>
 
 

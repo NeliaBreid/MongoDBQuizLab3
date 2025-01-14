@@ -1,28 +1,43 @@
 ﻿using System.Text.Json.Serialization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace QuizLab3.Model
 {
-    enum Difficulty { Easy, Medium, Hard }
+    public enum Difficulty { Easy, Medium, Hard }
 
-    internal class QuestionPack
+    public class QuestionPack
     {
-        [JsonConstructor]
-        public QuestionPack() //kan det här hjölpa något?
-        {
 
-        }
-        public QuestionPack(string name, Difficulty difficulty = Difficulty.Medium, int timeLimitInSeconds = 30)
+        [BsonElement("name")]
+        public string Name { get; set; }
+
+        [BsonRepresentation(MongoDB.Bson.BsonType.String)]
+        [BsonElement("difficulty")]
+        public Difficulty Difficulty { get; set; }
+
+        [BsonElement("timeLimitInSeconds")]
+        public int TimeLimitInSeconds { get; set; }
+
+        [BsonElement("questions")]
+        public List<Question> Questions { get; set; }
+        
+        [BsonElement("category")]
+        public string Category { get; set; }
+
+        public QuestionPack(string name, string category= null, Difficulty difficulty = Difficulty.Medium, int timeLimitInSeconds = 30)
         {
             Name = name;
             Difficulty = difficulty;
             TimeLimitInSeconds = timeLimitInSeconds;
             Questions = new List<Question>() ;
+            Category = category;
+        }
+        public QuestionPack() //kan det här hjölpa något?
+        {
+
         }
 
-        public string Name { get; set; }
-        public Difficulty Difficulty { get; set; }
-        public int TimeLimitInSeconds { get; set; }
-        public List<Question> Questions { get; set; }
 
     }
 }

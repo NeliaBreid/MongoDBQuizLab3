@@ -1,4 +1,5 @@
-﻿using QuizLab3.Model;
+﻿using QuizLab3.Data;
+using QuizLab3.Model;
 using QuizLab3.ViewModel;
 using System.ComponentModel;
 using System.Text;
@@ -25,20 +26,13 @@ namespace QuizLab3
             InitializeComponent();
 
             DataContext = viewModel = new MainWindowViewModel();
-
             Loaded += MainWindow_Loaded;
-            Closed += MainWindow_Closed;
         }
 
-        private async void MainWindow_Closed(object? sender, EventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            
-            await viewModel.SaveDataAsync();
-        }
-
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            await viewModel.LoadDataAsync();
+            DataBaseInitializer.SetDefaultCategory();
+            DataBaseInitializer.SetDefaultQuestionPack();
         }
     }
 }

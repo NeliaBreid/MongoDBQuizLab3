@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Windows;
 
 namespace QuizLab3
@@ -9,6 +10,7 @@ namespace QuizLab3
     /// </summary>
     public partial class App : Application
     {
+      
     }
 
 }

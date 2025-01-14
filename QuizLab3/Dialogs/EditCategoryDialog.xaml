@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuizLab3.Dialogs"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Edit Category" Height="320" Width="260" ResizeMode="NoResize">
+        Title="Edit Category" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

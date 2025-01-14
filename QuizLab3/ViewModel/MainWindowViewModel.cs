@@ -85,6 +85,7 @@ namespace QuizLab3.ViewModel
             ShowPlayerViewCommand = new DelegateCommand(ShowPlayerView, CanShowPlayerView);
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
+            CreateDefaultActivePack();
 
         }
 
@@ -170,18 +171,9 @@ namespace QuizLab3.ViewModel
             createResultDialog.ShowDialog();
         }
 
-        public async Task LoadDataAsync() 
+        public void CreateDefaultActivePack() //TODO:tillfälligt lösning
         {
-              
-            var JsonHandler = new QuizLab3.Json.Json();
-
-            List<QuestionPack> loadedPacks = await JsonHandler.LoadJson();
-
-            foreach (var pack in loadedPacks)
-            {
-                Packs.Add(new QuestionPackViewModel(pack));
-            }
-
+                          
             if (Packs.Any())
             {
                 ActivePack = Packs.First();
@@ -192,29 +184,9 @@ namespace QuizLab3.ViewModel
                 ActivePack = new QuestionPackViewModel(new QuestionPack("My Default QuestionPack"));
                 Packs.Add(ActivePack);
             };
-            ConfigurationViewModel.AddQuestionsCommand.RaiseCanExecuteChanged();
-            ConfigurationViewModel.RemoveQuestionsCommand.RaiseCanExecuteChanged();
-            ConfigurationViewModel.CreateQuestionPacksCommand.RaiseCanExecuteChanged();
-            ConfigurationViewModel.DeleteQuestionPacksCommand.RaiseCanExecuteChanged();
         }
 
-        public async Task SaveDataAsync()
-        {
-            var JsonHandler = new QuizLab3.Json.Json();
-
-            List<QuestionPack> packsToSave = Packs.Select(viewModel => new QuestionPack(
-
-                viewModel.Name,
-                viewModel.Difficulty,
-                viewModel.TimeLimitInSeconds)
-            {
-                Questions = viewModel.Questions.ToList()
-            }
-            ).ToList();
-
-            await JsonHandler.SaveJson(packsToSave);
-            
-        }
+        
     }
 }
 

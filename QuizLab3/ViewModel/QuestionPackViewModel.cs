@@ -39,7 +39,16 @@ namespace QuizLab3.ViewModel
                 model.TimeLimitInSeconds = value;
                 RaisePropertyChanged();
             }
-        }   
+        }
+        public string Category
+        {
+            get => model.Category;
+            set
+            {
+                model.Category = value;
+                RaisePropertyChanged();
+            }
+        }
         public ObservableCollection<Question> Questions { get; set; }
 
        

@@ -1,6 +1,7 @@
 ﻿using QuizLab3.Command;
 using QuizLab3.Model;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace QuizLab3.ViewModel
 {/// <summary>
@@ -10,13 +11,27 @@ namespace QuizLab3.ViewModel
     {
         public QuestionPackViewModel? ActivePack{ get => mainWindowViewModel?.ActivePack;}
         public ObservableCollection<QuestionPackViewModel> Packs { get => mainWindowViewModel.Packs; }
-        
+        public  ObservableCollection<Category> Categories { get; set; } //TODO: fixa en metod som lägge till kategorierna här
+
         private readonly MainWindowViewModel? mainWindowViewModel;
 
         private Question? _activeQuestion;
 
         private QuestionPack? _newQuestionPack;
 
+
+        private string? _selectedCategory;
+
+
+        public string? SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                _selectedCategory = value;
+                RaisePropertyChanged(nameof(SelectedCategory));
+            }
+        }
         public QuestionPack? NewQuestionPack
         {
             get => _newQuestionPack;
@@ -101,26 +116,31 @@ namespace QuizLab3.ViewModel
 
         private void CreatePack(object? parameter)
         { 
-            var newPack = new QuestionPackViewModel(new QuestionPack(NewQuestionPack.Name, NewQuestionPack.Difficulty, NewQuestionPack.TimeLimitInSeconds));
+            var newPack = new QuestionPackViewModel(new QuestionPack(NewQuestionPack.Name, NewQuestionPack.Category, NewQuestionPack.Difficulty, NewQuestionPack.TimeLimitInSeconds));
             Packs.Add(newPack);
 
             mainWindowViewModel.ActivePack = newPack;
             RaisePropertyChanged(nameof(ActivePack));
         }
 
-        private bool CanCreatePack()
-        {
-            return true;
-        }
+
         private void DeletePack(object parameter)
         {
-            if (ActivePack != null && Packs.Contains(ActivePack))
+           var result = MessageBox.Show("Are you sure you want to delete this questionpack?", "Confirmation", MessageBoxButton.YesNo);
+
+
+            if (ActivePack != null && Packs.Contains(ActivePack) && result == MessageBoxResult.Yes)
             {
                 Packs.Remove(ActivePack);
                 mainWindowViewModel.ActivePack = null;
                 DeleteQuestionPacksCommand.RaiseCanExecuteChanged();
+                RaisePropertyChanged(nameof(ActivePack));
             }
-            RaisePropertyChanged(nameof(ActivePack));
+
+            else if (result == MessageBoxResult.No)
+            {
+                return;
+            }
         }
     }
 }
