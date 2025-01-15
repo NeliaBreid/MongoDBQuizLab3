@@ -1,5 +1,7 @@
 ﻿using QuizLab3.Command;
+using QuizLab3.Data;
 using QuizLab3.Model;
+using QuizLab3.Repositories;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -11,7 +13,7 @@ namespace QuizLab3.ViewModel
     {
         public QuestionPackViewModel? ActivePack{ get => mainWindowViewModel?.ActivePack;}
         public ObservableCollection<QuestionPackViewModel> Packs { get => mainWindowViewModel.Packs; }
-        public  ObservableCollection<Category> Categories { get; set; } //TODO: fixa en metod som lägge till kategorierna här
+        public  ObservableCollection<Category> AllCategories { get; set; } //TODO: fixa en metod som lägge till kategorierna här
 
         private readonly MainWindowViewModel? mainWindowViewModel;
 
@@ -20,10 +22,21 @@ namespace QuizLab3.ViewModel
         private QuestionPack? _newQuestionPack;
 
 
-        private string? _selectedCategory;
+        private Category? _selectedCategoryToEdit; //TODO: ha som string istället?
+
+        private Category? _selectedCategory; //TODO: ha som string istället?
 
 
-        public string? SelectedCategory
+        public Category? SelectedCategoryToEdit
+        {
+            get => _selectedCategoryToEdit;
+            set
+            {
+                _selectedCategoryToEdit = value;
+                RaisePropertyChanged(nameof(SelectedCategoryToEdit));
+            }
+        }
+        public Category? SelectedCategory
         {
             get => _selectedCategory;
             set
@@ -56,6 +69,8 @@ namespace QuizLab3.ViewModel
         public DelegateCommand CreateQuestionPacksCommand { get; }
         public DelegateCommand DeleteQuestionPacksCommand { get; }
 
+        private readonly CategoryRepository _categoryRepository;//
+
         public ConfigurationViewModel(MainWindowViewModel? mainWindowViewModel)
         {
             this.mainWindowViewModel = mainWindowViewModel;
@@ -68,6 +83,11 @@ namespace QuizLab3.ViewModel
 
             CreateQuestionPacksCommand = new DelegateCommand(CreatePack);
             DeleteQuestionPacksCommand = new DelegateCommand(DeletePack);
+
+            _categoryRepository = new CategoryRepository();
+
+            // Initiera ObservableCollection
+            AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories());
         }
 
         private void AddQuestionToActivePack(object parameter)

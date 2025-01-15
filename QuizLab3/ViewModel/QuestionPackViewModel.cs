@@ -11,7 +11,6 @@ namespace QuizLab3.ViewModel
         {
             this.model = model;
             this.Questions = new ObservableCollection<Question>(model.Questions);
-
         }
         public string Name 
         {
@@ -50,8 +49,6 @@ namespace QuizLab3.ViewModel
             }
         }
         public ObservableCollection<Question> Questions { get; set; }
-
        
     }
-
 }

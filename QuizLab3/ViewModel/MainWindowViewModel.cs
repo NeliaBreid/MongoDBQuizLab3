@@ -1,7 +1,10 @@
 ﻿using QuizLab3.Command;
+using QuizLab3.Data;
 using QuizLab3.Dialogs;
 using QuizLab3.Model;
+using QuizLab3.Repositories;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Windows;
 using System.Windows.Input;
 
@@ -64,6 +67,8 @@ namespace QuizLab3.ViewModel
         public DelegateCommand ShowPlayerViewCommand { get; }
         public DelegateCommand FullScreenCommand { get; }
 
+     
+
         public MainWindowViewModel()
         {
             Packs = new ObservableCollection<QuestionPackViewModel>();
@@ -86,6 +91,8 @@ namespace QuizLab3.ViewModel
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
             CreateDefaultActivePack();
+
+
 
         }
 

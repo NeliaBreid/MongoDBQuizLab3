@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace QuizLab3.Repositories
 {
-    internal class QuestionPackRepository
+    public class QuestionPackRepository
     {
-        // Metod för att spara frågor
+        public QuestionPackRepository()
+        {
+
+        }
         
-    }
+        // Metod för att spara frågor
+
+    } 
 }

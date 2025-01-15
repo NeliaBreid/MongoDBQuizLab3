@@ -12,7 +12,7 @@ namespace QuizLab3.Data
         public QuizDbContext()
         {
             var client = new MongoClient("mongodb://localhost:27017");
-            _database = client.GetDatabase("CorneliaBreid");
+            _database = client.GetDatabase("CorneliaBreid"); //mitt namn på databasen
 
             Categories = _database.GetCollection<Category>("Categories");
             QuestionPacks = _database.GetCollection<QuestionPack>("QuestionPacks");

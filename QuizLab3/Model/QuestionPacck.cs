@@ -25,7 +25,7 @@ namespace QuizLab3.Model
         [BsonElement("category")]
         public string Category { get; set; }
 
-        public QuestionPack(string name, string category= null, Difficulty difficulty = Difficulty.Medium, int timeLimitInSeconds = 30)
+        public QuestionPack(string name, string category ="hejhej", Difficulty difficulty = Difficulty.Medium, int timeLimitInSeconds = 30)
         {
             Name = name;
             Difficulty = difficulty;

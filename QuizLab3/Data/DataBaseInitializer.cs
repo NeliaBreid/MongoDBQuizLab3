@@ -16,13 +16,19 @@ namespace QuizLab3.Data
             var categoryCount = context.Categories.CountDocuments(_ => true);
             if (categoryCount == 0)
             {
-                var animalCategory = new Category
-                {
-                    Name = "Animals"
-                };
+                var animalCategory = new Category("Animals");
+
+                var musicCategory = new Category("Music");
+
+                var sportCategory = new Category("Sport");
+               
+
+
 
                 // Insert a new category
-                context.Categories.InsertOne(animalCategory);
+                context.Categories.InsertOne(animalCategory); //TODO: insertmany istället?
+                context.Categories.InsertOne(musicCategory);
+                context.Categories.InsertOne(sportCategory);
             }
         }
 
@@ -39,20 +45,26 @@ namespace QuizLab3.Data
                     Name = "Blabla",
                     Difficulty = Difficulty.Medium,
                     TimeLimitInSeconds = 30,
-                    Category = "Äventyr",
+                    Category = "Sport",
                     Questions = new List<Question>
                     {
                         new Question
                         {
                             Query = "En fråga",
-                            CorrectAnswer = "Korrekt svar",
+                            CorrectAnswer = "Korrekt svar1",
                             IncorrectAnswers = new [] { "fel1", "fel2", "fel3" }
                         },
                         new Question
                         {
                             Query = "En till fråga",
-                            CorrectAnswer = "Korrekt svar andra gången",
-                            IncorrectAnswers = new [] { "fel1", "fel2", "fel3" }
+                            CorrectAnswer = "Korrekt svar2",
+                            IncorrectAnswers = new [] { "fell1", "fell2", "fell3" }
+                        },
+                        new Question
+                        {
+                            Query = "En tredje fråga",
+                            CorrectAnswer = "Korrekt svar3",
+                            IncorrectAnswers = new [] { "felll1", "felll2", "fel3" }
                         }
                     }
                 };

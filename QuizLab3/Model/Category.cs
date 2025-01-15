@@ -19,11 +19,11 @@ namespace QuizLab3.Model
         public Category(string name)
         {
             Name = name;
-            //Lägg en metod som skapar upp tre stycken kategorier som defaultkategorier
+            
         }
-        public Category()
-        {
+        //public Category()
+        //{
 
-        }
+        //}
     }
 }

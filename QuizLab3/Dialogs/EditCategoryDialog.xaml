@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Edit Category" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
-    <Grid Margin="10">
+
+    <Grid Margin="10" DataContext="{Binding ConfigurationViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -18,27 +19,26 @@
         
             <Label Content="Choose Category" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,5"/>
 
-            <ListBox Grid.Row="1" Height="150" Margin="0,0,0,10"
+        <ListBox Grid.Row="1" Height="150" Margin="0,0,0,10"
                  SelectionMode="Single" 
-                 SelectedItem="{Binding ActiveQuestion, Mode=TwoWay}"
-                 ItemsSource="{Binding ActivePack.Questions, Mode=TwoWay}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding CategoryName}" FontWeight="Bold"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
+                 SelectedItem="{Binding SelectedCategoryToEdit, Mode=TwoWay}"
+                 ItemsSource="{Binding AllCategories, Mode=TwoWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
             <Label Content="Edit Category" FontWeight="Bold" Margin="0,0,0,5"/>
-            <TextBox Width="200" Height="25" Text="{Binding SelectedCategoryName}" Margin="0,0,0,5"/>
+            <TextBox Width="200" Height="25" Text="{Binding SelectedCategoryToEdit.Name}" Margin="0,0,0,5"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="Add" Width="60" Margin="5"/>
             <Button Content="Remove" Width="60" Margin="5"/>
-            <Button Content="Cancel" Width="60" Margin="5"/>
+            <Button Content="Cancel" Width="60" Margin="5" Click="Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>
