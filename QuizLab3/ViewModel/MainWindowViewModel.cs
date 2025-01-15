@@ -68,7 +68,7 @@ namespace QuizLab3.ViewModel
         public DelegateCommand FullScreenCommand { get; }
 
      
-
+        private readonly QuestionPackRepository _questionPackRepository;
         public MainWindowViewModel()
         {
             Packs = new ObservableCollection<QuestionPackViewModel>();
@@ -90,16 +90,37 @@ namespace QuizLab3.ViewModel
             ShowPlayerViewCommand = new DelegateCommand(ShowPlayerView, CanShowPlayerView);
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
-            CreateDefaultActivePack();
 
+            _questionPackRepository = new QuestionPackRepository();
 
+            LoadQuestionPacks(); //TODO: Ser bra ut! lägg den här någon annanstans
+        }
+        private void LoadQuestionPacks()
+        {
+                var questionPacks = _questionPackRepository.GetAllQuestionPacks();
+            if (Packs.Any())
+            {
+
+                Packs = new ObservableCollection<QuestionPackViewModel>(
+                    questionPacks.Select(pack => new QuestionPackViewModel(pack))
+                ); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
+
+                ActivePack = Packs.First();
+
+            }
+
+            if (ActivePack == null)
+            {
+                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); //TODO: Sätt in massor villkor här
+                ActivePack = new QuestionPackViewModel(defaultPack);;
+                Packs.Add(ActivePack);
+            }
 
         }
 
-
         private void OpenNewPackDialog(object obj)
         {
-            ConfigurationViewModel.NewQuestionPack = new QuestionPack(" ");
+            ConfigurationViewModel.NewQuestionPack = new QuestionPack();
 
             CreateNewPackDialog createNewPackDialog = new CreateNewPackDialog();
             createNewPackDialog.ShowDialog();
@@ -178,20 +199,7 @@ namespace QuizLab3.ViewModel
             createResultDialog.ShowDialog();
         }
 
-        public void CreateDefaultActivePack() //TODO:tillfälligt lösning
-        {
-                          
-            if (Packs.Any())
-            {
-                ActivePack = Packs.First();
-            }
 
-            if (ActivePack == null)
-            {
-                ActivePack = new QuestionPackViewModel(new QuestionPack("My Default QuestionPack"));
-                Packs.Add(ActivePack);
-            };
-        }
 
         
     }

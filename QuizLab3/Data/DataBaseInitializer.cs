@@ -32,14 +32,12 @@ namespace QuizLab3.Data
             }
         }
 
-        public static void SetDefaultQuestionPack()
+        public static QuestionPack SetDefaultQuestionPack()
         {
             var context = new QuizDbContext();
 
             // Check if the collection contains any question packs
-            var questionPackCount = context.QuestionPacks.CountDocuments(_ => true);
-            if (questionPackCount == 0)
-            {
+
                 var defaultQuestionPack = new QuestionPack
                 {
                     Name = "Blabla",
@@ -66,12 +64,17 @@ namespace QuizLab3.Data
                             CorrectAnswer = "Korrekt svar3",
                             IncorrectAnswers = new [] { "felll1", "felll2", "fel3" }
                         }
-                    }
+                    }                
+                
                 };
+                    context.QuestionPacks.InsertOne(defaultQuestionPack);
+                return defaultQuestionPack;
 
                 // Insert a new question pack
-                context.QuestionPacks.InsertOne(defaultQuestionPack);
+                
             }
+            
+            
         }
-    }
-}
+   }
+

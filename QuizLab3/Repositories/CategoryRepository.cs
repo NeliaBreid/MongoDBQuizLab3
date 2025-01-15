@@ -30,5 +30,18 @@ namespace QuizLab3.Repositories
             return categories;
         }
 
+        public void RemoveCategory()
+        {
+            //Om kategorin inte finns, händer inget
+
+            //Om kategorin finns, ta bort från databasen
+        }
+        public void UppdateCategories()
+        {
+            //Om kategori med samma namn finns så spara inte
+
+            //Om kategori med samma namn inte finns så spara i databasen
+        }
+
     }
 }

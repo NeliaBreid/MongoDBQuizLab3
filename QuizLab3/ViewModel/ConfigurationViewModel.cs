@@ -86,8 +86,8 @@ namespace QuizLab3.ViewModel
 
             _categoryRepository = new CategoryRepository();
 
-            // Initiera ObservableCollection
-            AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories());
+
+            AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories()); //TODO: Läses inte in första gången?
         }
 
         private void AddQuestionToActivePack(object parameter)

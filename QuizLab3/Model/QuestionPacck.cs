@@ -8,6 +8,9 @@ namespace QuizLab3.Model
 
     public class QuestionPack
     {
+        [BsonId] 
+        [BsonRepresentation(BsonType.ObjectId)]  
+        public string Id { get; set; }
 
         [BsonElement("name")]
         public string Name { get; set; }
@@ -25,7 +28,7 @@ namespace QuizLab3.Model
         [BsonElement("category")]
         public string Category { get; set; }
 
-        public QuestionPack(string name, string category ="hejhej", Difficulty difficulty = Difficulty.Medium, int timeLimitInSeconds = 30)
+        public QuestionPack(string name, string category, Difficulty difficulty, int timeLimitInSeconds)
         {
             Name = name;
             Difficulty = difficulty;

@@ -19,11 +19,8 @@ namespace QuizLab3.Model
         public Category(string name)
         {
             Name = name;
-            
-        }
-        //public Category()
-        //{
 
-        //}
+        }
+
     }
 }

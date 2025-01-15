@@ -1,17 +1,6 @@
 ﻿using QuizLab3.Data;
-using QuizLab3.Model;
 using QuizLab3.ViewModel;
-using System.ComponentModel;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QuizLab3
 {
@@ -31,6 +20,8 @@ namespace QuizLab3
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            //TODO: när man startar så ska den kolla om databasen finns, annars skapa den.
+
             DataBaseInitializer.SetDefaultCategory();
             DataBaseInitializer.SetDefaultQuestionPack();
         }
