@@ -14,15 +14,10 @@ Det går att lägga till / ta bort frågor på flera sätt: Via menyn, Via snabb
 
 När man startar play mode visar hur många frågor det är i det aktiva “Frågepaketet”, samt vilken fråga man är på i turordning. Man kan alltså svara på alla frågor i paketet innan man får ett resultat som visar hur många rätt man hade. Ordningen frågorna visas i ska dock slumpas från gång till gång; likadant med ordningen som svarsalternativen visas i. Det finns en timer som räknar ner (betänketid per fråga ska gå att ställa in när man konfigurerar packen), och efter man klickat på ett svar (eller tiden tar slut) får användaren feedback på om man svarat rätt/fel, samt vilket det korrekta svarsalternativet är.
 
+
 ## Menyn
 
 Menyn har ikoner för de olika alternativen (t.ex med font-awesome). Menyalternativen går att aktivera från tangentbordet både med snabbvalsknappar, och med alt-knappen, till exempel Ctrl+O, samt Alt+E, O för “Pack Options”.
-
-
-## Json
-
-Appen sparar paket och frågor i Json, så att man kan ladda in dem vid ett senare tillfälle. 
-
 
 ## **Full Screen**
 
