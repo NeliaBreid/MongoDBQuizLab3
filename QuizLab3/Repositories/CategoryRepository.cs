@@ -38,30 +38,29 @@ namespace QuizLab3.Repositories
 
             //Om kategorin finns, ta bort från databasen
         }
-        public void UppdateCategories(Category category)
+        public void UpdateCategory(Category category)
         {
-            //TODO: Dela upp i två metoder? Ha två olika commands att skifta emellan?
-
             if (category == null) return;
 
-            
+            // Hitta den befintliga kategorin baserat på namn
             var existingCategory = _categoriesCollection.Find(c => c.Name == category.Name).FirstOrDefault();
 
             if (existingCategory != null)
             {
-                
-                if (existingCategory.Id != category.Id)
-                {
+                // Om vi har hittat en kategori men det är en annan (inte samma kategori) uppdaterar vi den
                     var filter = Builders<Category>.Filter.Eq(c => c.Id, existingCategory.Id);
                     var update = Builders<Category>.Update.Set(c => c.Name, category.Name);
                     _categoriesCollection.UpdateOne(filter, update);
-                }
-               
+
             }
-            else
-            {
-                _categoriesCollection.InsertOne(category);
-            }
+        }
+        public void AddCategory(Category newCategory)
+        {
+
+            if (newCategory == null) return;
+
+            // Lägg till den nya kategorin i databasen
+            _categoriesCollection.InsertOne(newCategory);
         }
 
     }

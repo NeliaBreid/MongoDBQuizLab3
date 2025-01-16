@@ -31,8 +31,11 @@
                       ItemsSource="{Binding Source={StaticResource DifficultyValues}}">
             </ComboBox>
 
-            <Label Content="Category" FontWeight="Bold"/>
-            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="5, 10, 0, 0" Text="Category:" FontWeight="Bold"/>
+                <TextBlock Margin="80 10 5 10" Text="{Binding ActivePack.Category, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
             <ComboBox Margin="5 0 5 10"
              SelectedValue="{Binding ActivePack.Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              SelectedValuePath="Name"

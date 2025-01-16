@@ -26,8 +26,21 @@ namespace QuizLab3.ViewModel
 
         private Category? _selectedCategoryToEdit; //TODO: ha som string istället?
 
-        private Category? _selectedCategory; //TODO: ha som string istället?
         private Category? _newCategoryName; //TODO: ha denna prop?
+
+        private Category _selectedCategoryDisplay;
+        public Category SelectedCategoryDisplay
+        {
+            get => _selectedCategoryDisplay;
+            set
+            {
+                if (_selectedCategoryDisplay != value)
+                {
+                    _selectedCategoryDisplay = value;
+                    RaisePropertyChanged(nameof(SelectedCategoryDisplay));
+                }
+            }
+        }
         public Category NewCategory
         {
             get => _newCategoryName;
@@ -46,15 +59,6 @@ namespace QuizLab3.ViewModel
                 _selectedCategoryToEdit = value;
                 NewCategory = value != null ? new Category { Id = value.Id, Name = value.Name } : new Category();
                 RaisePropertyChanged(nameof(SelectedCategoryToEdit));
-            }
-        }
-        public Category? SelectedCategory
-        {
-            get => _selectedCategory;
-            set
-            {
-                _selectedCategory = value;
-                RaisePropertyChanged(nameof(SelectedCategory));
             }
         }
         public QuestionPack? NewQuestionPack
@@ -82,6 +86,7 @@ namespace QuizLab3.ViewModel
         public DelegateCommand DeleteQuestionPacksCommand { get; }
         public DelegateCommand UpdateCategoryCommand { get; }
         public DelegateCommand DeleteCategoryCommand { get; }
+        public DelegateCommand ClearCategoryNameCommand { get; }
 
 
         public ConfigurationViewModel(MainWindowViewModel? mainWindowViewModel)
@@ -97,8 +102,10 @@ namespace QuizLab3.ViewModel
             CreateQuestionPacksCommand = new DelegateCommand(CreatePack);
             DeleteQuestionPacksCommand = new DelegateCommand(DeletePack);
 
-            UpdateCategoryCommand = new DelegateCommand(UpdateCategory);
+            UpdateCategoryCommand = new DelegateCommand(UpdateOrAddCategory, CanUpdateOrAddCategory);
             DeleteCategoryCommand = new DelegateCommand(RemoveCategory);
+            ClearCategoryNameCommand = new DelegateCommand(ClearTextBox);
+
 
             _categoryRepository = new CategoryRepository();
             _questionPackRepository = new QuestionPackRepository();
@@ -111,16 +118,20 @@ namespace QuizLab3.ViewModel
             {
                 DataBaseInitializer.SetDefaultCategory();
             }
-            AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories());
+                AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories());
             RaisePropertyChanged(nameof(AllCategories));
 
+        }
+        private void ClearTextBox(object parameter)
+        {
+            SelectedCategoryToEdit = null;
+            NewCategory.Name = string.Empty;
         }
         private void ClearNewCategory()
         {
             SelectedCategoryToEdit = null;
-            NewCategory = new Category("");//
+            NewCategory.Name = string.Empty;
         }
-
         private void AddQuestionToActivePack(object parameter)
         {
             var newQuestion = new Question(
@@ -198,17 +209,37 @@ namespace QuizLab3.ViewModel
             }
         }
 
-        private void UpdateCategory(object parameter)
+
+        private void UpdateOrAddCategory(object parameter)
         {
-            _categoryRepository.UppdateCategories(SelectedCategoryToEdit);
-                LoadCategories();
-                ClearNewCategory();
+            if (SelectedCategoryToEdit != null)
+            {
+                // Uppdatera kategori om en kategori är vald
+                _categoryRepository.UpdateCategory(SelectedCategoryToEdit); //TODO: Få uppdateringen att fungera
+                
+            }
+            else if (!string.IsNullOrEmpty(NewCategory.Name)) //Det här villkoret funkar inte
+            {
+                // Lägg till ny kategori om ingen kategori är vald
+                _categoryRepository.AddCategory(NewCategory);
+                
+            }
+
+            LoadCategories();
+            NewCategory.Name = string.Empty;
+            ClearNewCategory();
+        }
+        private bool CanUpdateOrAddCategory(object parameter)
+        {
+            // Kan bara uppdatera eller lägga till om en kategori är vald eller en ny kategori finns
+            return SelectedCategoryToEdit != null || NewCategory != null;
         }
         private void RemoveCategory(object parameter)
         {
             _categoryRepository.RemoveCategory(SelectedCategoryToEdit);
             LoadCategories();
             ClearNewCategory();
+            RaisePropertyChanged(nameof(AllCategories));
         }
     }
 }
