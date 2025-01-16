@@ -32,10 +32,11 @@
             </ComboBox>
 
             <Label Content="Category" FontWeight="Bold"/>
-
+            
             <ComboBox Margin="5 0 5 10"
-                       SelectedItem="{Binding SelectedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       ItemsSource="{Binding AllCategories}">
+             SelectedValue="{Binding ActivePack.Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             SelectedValuePath="Name"
+             ItemsSource="{Binding AllCategories}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />

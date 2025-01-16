@@ -16,14 +16,14 @@ namespace QuizLab3
 
             DataContext = viewModel = new MainWindowViewModel();
             Loaded += MainWindow_Loaded;
+            
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //TODO: när man startar så ska den kolla om databasen finns, annars skapa den.
+            viewModel.LoadQuestionPacks();
+            //TODO: 
 
-            DataBaseInitializer.SetDefaultCategory();
-            DataBaseInitializer.SetDefaultQuestionPack();
         }
     }
 }

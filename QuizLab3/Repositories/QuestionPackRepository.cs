@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MongoDB.Driver;
-using MongoDB.Driver.Core.Events;
+﻿using MongoDB.Driver;
 using QuizLab3.Data;
 using QuizLab3.Model;
-using QuizLab3.ViewModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace QuizLab3.Repositories
 {
@@ -28,6 +19,18 @@ namespace QuizLab3.Repositories
             var packs = _packsCollection.Find(_ => true).ToList();
 
             return packs;
+        }
+
+        public void AddQuestionPack(QuestionPack newQuestionPack)
+        {
+             _packsCollection.InsertOne(newQuestionPack);
+        }
+        public List<Question> GetAllQuestions()
+        {
+            var packs = GetAllQuestionPacks();  // Hämtar alla packs
+            var allQuestions = packs.SelectMany(pack => pack.Questions).ToList(); // Samlar alla frågor
+
+            return allQuestions;
         }
 
         // Metod för att spara frågor

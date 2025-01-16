@@ -1,14 +1,11 @@
 ﻿using MongoDB.Driver;
 using QuizLab3.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace QuizLab3.Data
 {
     public static class DataBaseInitializer
     {
-        public static void SetDefaultCategory()
+        public static void SetDefaultCategory() //TODO:Gör säkerhetsnät ifall det redan finns
         {
             var context = new QuizDbContext();
 
@@ -21,9 +18,6 @@ namespace QuizLab3.Data
                 var musicCategory = new Category("Music");
 
                 var sportCategory = new Category("Sport");
-               
-
-
 
                 // Insert a new category
                 context.Categories.InsertOne(animalCategory); //TODO: insertmany istället?
@@ -32,44 +26,62 @@ namespace QuizLab3.Data
             }
         }
 
-        public static QuestionPack SetDefaultQuestionPack()
+        public static QuestionPack SetDefaultQuestionPack()//TODO: Gör säkerhetsnät ifall det redan finns
         {
             var context = new QuizDbContext();
 
             // Check if the collection contains any question packs
+            var packCount = context.QuestionPacks.CountDocuments(_ => true);
+            if (packCount == 0)
+            {
+                //Om Category category
+                //// Hämta en befintlig kategori från databasen, t.ex. "Sport"
+                //var sportCategory = context.Categories.Find(c => c.Name == "Sport").FirstOrDefault();
+
+                //// Om kategorin inte finns, skapa den
+                //if (sportCategory == null)
+                //{
+                //    sportCategory = new Category("Sport");
+                //    context.Categories.InsertOne(sportCategory);
+                //}
 
                 var defaultQuestionPack = new QuestionPack
                 {
-                    Name = "Blabla",
+                    Name = "Default QuestionPack",
                     Difficulty = Difficulty.Medium,
                     TimeLimitInSeconds = 30,
                     Category = "Sport",
                     Questions = new List<Question>
                     {
-                        new Question
+                         new Question
                         {
-                            Query = "En fråga",
-                            CorrectAnswer = "Korrekt svar1",
-                            IncorrectAnswers = new [] { "fel1", "fel2", "fel3" }
+                            Query = "Vilket djur är störst?",
+                            CorrectAnswer = "Blåval",
+                            IncorrectAnswers = new[] { "Elefant", "Giraff", "Noshörning" }
                         },
                         new Question
                         {
-                            Query = "En till fråga",
-                            CorrectAnswer = "Korrekt svar2",
-                            IncorrectAnswers = new [] { "fell1", "fell2", "fell3" }
+                            Query = "Vilket instrument har sex strängar?",
+                            CorrectAnswer = "Gitarr",
+                            IncorrectAnswers = new[] { "Fiol", "Bas", "Piano" }
                         },
                         new Question
                         {
-                            Query = "En tredje fråga",
-                            CorrectAnswer = "Korrekt svar3",
-                            IncorrectAnswers = new [] { "felll1", "felll2", "fel3" }
+                            Query = "Hur många spelare finns i ett fotbollslag?",
+                            CorrectAnswer = "11",
+                            IncorrectAnswers = new[] { "9", "10", "12" }
                         }
                     }                
                 
                 };
-                    context.QuestionPacks.InsertOne(defaultQuestionPack);
+                context.QuestionPacks.InsertOne(defaultQuestionPack);
                 return defaultQuestionPack;
+            }
 
+            else
+            {
+                return context.QuestionPacks.Find(_ => true).FirstOrDefault();
+            }
                 // Insert a new question pack
                 
             }

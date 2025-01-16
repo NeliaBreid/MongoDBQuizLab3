@@ -11,6 +11,9 @@ namespace QuizLab3.ViewModel
 /// </summary>
     class ConfigurationViewModel : ViewModelBase
     {
+        private readonly CategoryRepository _categoryRepository;
+
+        private readonly QuestionPackRepository _questionPackRepository;
         public QuestionPackViewModel? ActivePack{ get => mainWindowViewModel?.ActivePack;}
         public ObservableCollection<QuestionPackViewModel> Packs { get => mainWindowViewModel.Packs; }
         public  ObservableCollection<Category> AllCategories { get; set; } //TODO: fixa en metod som lägge till kategorierna här
@@ -21,11 +24,19 @@ namespace QuizLab3.ViewModel
 
         private QuestionPack? _newQuestionPack;
 
-
         private Category? _selectedCategoryToEdit; //TODO: ha som string istället?
 
         private Category? _selectedCategory; //TODO: ha som string istället?
-
+        private Category? _newCategoryName; //TODO: ha denna prop?
+        public Category NewCategory
+        {
+            get => _newCategoryName;
+            set
+            {
+                _newCategoryName = value;
+                RaisePropertyChanged(nameof(NewCategory));
+            }
+        }
 
         public Category? SelectedCategoryToEdit
         {
@@ -33,6 +44,7 @@ namespace QuizLab3.ViewModel
             set
             {
                 _selectedCategoryToEdit = value;
+                NewCategory = value != null ? new Category { Id = value.Id, Name = value.Name } : new Category();
                 RaisePropertyChanged(nameof(SelectedCategoryToEdit));
             }
         }
@@ -68,8 +80,9 @@ namespace QuizLab3.ViewModel
         public DelegateCommand RemoveQuestionsCommand { get; }
         public DelegateCommand CreateQuestionPacksCommand { get; }
         public DelegateCommand DeleteQuestionPacksCommand { get; }
+        public DelegateCommand UpdateCategoryCommand { get; }
+        public DelegateCommand DeleteCategoryCommand { get; }
 
-        private readonly CategoryRepository _categoryRepository;//
 
         public ConfigurationViewModel(MainWindowViewModel? mainWindowViewModel)
         {
@@ -84,10 +97,28 @@ namespace QuizLab3.ViewModel
             CreateQuestionPacksCommand = new DelegateCommand(CreatePack);
             DeleteQuestionPacksCommand = new DelegateCommand(DeletePack);
 
+            UpdateCategoryCommand = new DelegateCommand(UpdateCategory);
+            DeleteCategoryCommand = new DelegateCommand(RemoveCategory);
+
             _categoryRepository = new CategoryRepository();
+            _questionPackRepository = new QuestionPackRepository();
+            LoadCategories();
+        }
 
+        public void LoadCategories()
+        {
+            if (AllCategories == null)
+            {
+                DataBaseInitializer.SetDefaultCategory();
+            }
+            AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories());
+            RaisePropertyChanged(nameof(AllCategories));
 
-            AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories()); //TODO: Läses inte in första gången?
+        }
+        private void ClearNewCategory()
+        {
+            SelectedCategoryToEdit = null;
+            NewCategory = new Category("");//
         }
 
         private void AddQuestionToActivePack(object parameter)
@@ -112,7 +143,7 @@ namespace QuizLab3.ViewModel
         }
         private bool CanAddQuestionToActivePack(object parameter)
         {
-            return ActivePack != null;
+            return true; //ActivePack != null; //TODO: DEN HÄR SLUTADE FUNGERA
            
         }
         private void RemoveQuestionFromActivePack(object parameter)
@@ -135,9 +166,13 @@ namespace QuizLab3.ViewModel
         }
 
         private void CreatePack(object? parameter)
-        { 
-            var newPack = new QuestionPackViewModel(new QuestionPack(NewQuestionPack.Name, NewQuestionPack.Category, NewQuestionPack.Difficulty, NewQuestionPack.TimeLimitInSeconds));
+        {
+            var questionPack = new QuestionPack(NewQuestionPack.Name, NewQuestionPack.Category, NewQuestionPack.Difficulty, NewQuestionPack.TimeLimitInSeconds);
+
+            var newPack = new QuestionPackViewModel(questionPack);
             Packs.Add(newPack);
+
+            _questionPackRepository.AddQuestionPack(questionPack); //TODO: HJÄLP ELLER, category blir tokigt. Just nu läses inget in vid app start.
 
             mainWindowViewModel.ActivePack = newPack;
             RaisePropertyChanged(nameof(ActivePack));
@@ -161,6 +196,19 @@ namespace QuizLab3.ViewModel
             {
                 return;
             }
+        }
+
+        private void UpdateCategory(object parameter)
+        {
+            _categoryRepository.UppdateCategories(SelectedCategoryToEdit);
+                LoadCategories();
+                ClearNewCategory();
+        }
+        private void RemoveCategory(object parameter)
+        {
+            _categoryRepository.RemoveCategory(SelectedCategoryToEdit);
+            LoadCategories();
+            ClearNewCategory();
         }
     }
 }

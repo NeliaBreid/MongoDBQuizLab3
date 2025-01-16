@@ -32,13 +32,13 @@
 
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
             <Label Content="Edit Category" FontWeight="Bold" Margin="0,0,0,5"/>
-            <TextBox Width="200" Height="25" Text="{Binding SelectedCategoryToEdit.Name}" Margin="0,0,0,5"/>
+            <TextBox Width="200" Height="25" Text="{Binding NewCategory.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,0,5"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Add" Width="60" Margin="5"/>
-            <Button Content="Remove" Width="60" Margin="5"/>
-            <Button Content="Cancel" Width="60" Margin="5" Click="Button_Click"/>
+            <Button Content="Update" Width="60" Margin="5" Command="{Binding UpdateCategoryCommand}"/>
+            <Button Content="Remove" Width="60" Margin="5" Command="{Binding DeleteCategoryCommand}"/>
+            <Button Content="Cancel" Width="60" Margin="5"  Click="Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>

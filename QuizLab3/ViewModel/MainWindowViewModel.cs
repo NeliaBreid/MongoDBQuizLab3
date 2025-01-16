@@ -93,27 +93,29 @@ namespace QuizLab3.ViewModel
 
             _questionPackRepository = new QuestionPackRepository();
 
-            LoadQuestionPacks(); //TODO: Ser bra ut! lägg den här någon annanstans
         }
-        private void LoadQuestionPacks()
+        public void LoadQuestionPacks()
         {
-                var questionPacks = _questionPackRepository.GetAllQuestionPacks();
-            if (Packs.Any())
-            {
+            var questionPacks = _questionPackRepository.GetAllQuestionPacks();
 
-                Packs = new ObservableCollection<QuestionPackViewModel>(
-                    questionPacks.Select(pack => new QuestionPackViewModel(pack))
-                ); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
+            if (questionPacks == null || !questionPacks.Any()) //Kollar om det finns något i databasen, om tom så går den in och gör default
+            {
+                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); 
+                ActivePack = new QuestionPackViewModel(defaultPack);;
+                Packs.Add(ActivePack);
+            }
+            else
+            {
+                var loadedPacks= new ObservableCollection<QuestionPackViewModel>(
+                    questionPacks.Select(pack => new QuestionPackViewModel(pack))); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
+
+               foreach (var pack in loadedPacks)
+                {
+                    Packs.Add(pack);
+                }
 
                 ActivePack = Packs.First();
 
-            }
-
-            if (ActivePack == null)
-            {
-                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); //TODO: Sätt in massor villkor här
-                ActivePack = new QuestionPackViewModel(defaultPack);;
-                Packs.Add(ActivePack);
             }
 
         }
@@ -137,6 +139,7 @@ namespace QuizLab3.ViewModel
 
         private void OpenCategoryDialog(object? obj)
         {
+            ConfigurationViewModel.NewCategory = new Category();
             EditCategoryDialog editCategoryDialog = new EditCategoryDialog();
             editCategoryDialog.ShowDialog();
         }

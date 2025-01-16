@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace QuizLab3.Model
 {
-   public class Category
+    public class Category
     {
         [BsonId]
         public ObjectId Id { get; set; }//???
@@ -21,6 +16,11 @@ namespace QuizLab3.Model
             Name = name;
 
         }
+        public Category() 
+        {
+
+        }
 
     }
+    
 }

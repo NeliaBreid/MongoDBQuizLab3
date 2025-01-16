@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace QuizLab3.Model
@@ -26,7 +25,7 @@ namespace QuizLab3.Model
         public List<Question> Questions { get; set; }
         
         [BsonElement("category")]
-        public string Category { get; set; }
+        public string Category { get; set; } // TODO: kolla på dethär
 
         public QuestionPack(string name, string category, Difficulty difficulty, int timeLimitInSeconds)
         {
@@ -36,7 +35,7 @@ namespace QuizLab3.Model
             Questions = new List<Question>() ;
             Category = category;
         }
-        public QuestionPack() //kan det här hjölpa något?
+        public QuestionPack() 
         {
 
         }
