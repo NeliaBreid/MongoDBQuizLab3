@@ -23,11 +23,20 @@
                  SelectionMode="Single" 
                  SelectedItem="{Binding SelectedCategoryToEdit, Mode=TwoWay}"
                  ItemsSource="{Binding AllCategories, Mode=TwoWay}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
+
+            <ListBox.Template>
+                <ControlTemplate TargetType="ListBox">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+                </ListBox.Template>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
         </ListBox>
 
         <StackPanel Grid.Row="2" Margin="0,0,0,10">

@@ -4,8 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace QuizLab3.Model
 {
     public class Question 
-    {[BsonIgnore]
-        public string Id { get; set; }
+    {
         [BsonElement("query")]
         public string Query { get; set; }
 
@@ -15,7 +14,7 @@ namespace QuizLab3.Model
         [BsonElement("incorrectAnswers")]
         public string[] IncorrectAnswers { get; set; }
         
-        public Question() //
+        public Question() 
         {
 
         }

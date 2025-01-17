@@ -109,7 +109,9 @@ namespace QuizLab3.ViewModel
                 var loadedPacks= new ObservableCollection<QuestionPackViewModel>(
                     questionPacks.Select(pack => new QuestionPackViewModel(pack))); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
 
-               foreach (var pack in loadedPacks)
+                _questionPackRepository.GetAllQuestions();//TODO: kolla om den här fungerar
+
+                foreach (var pack in loadedPacks)
                 {
                     Packs.Add(pack);
                 }

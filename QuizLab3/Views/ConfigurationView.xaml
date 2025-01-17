@@ -105,6 +105,12 @@
 
                 <TextBlock FontWeight="Bold" Margin="20 0 0 0" Text="Third Incorrect Answer:" />
                 <TextBox Margin="20 0 20 10" Text="{Binding ActiveQuestion.IncorrectAnswers[2], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Button  
+                  Content="Save"
+                  FontSize="15"
+                  Width="40" 
+                  Height="20" 
+                  Command="{Binding SaveQuestionCommand}"/>
 
             </StackPanel>
         </StackPanel>

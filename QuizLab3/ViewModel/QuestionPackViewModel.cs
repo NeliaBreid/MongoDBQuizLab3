@@ -1,4 +1,5 @@
-﻿using QuizLab3.Model;
+﻿using MongoDB.Bson;
+using QuizLab3.Model;
 using System.Collections.ObjectModel;
 
 namespace QuizLab3.ViewModel
@@ -10,6 +11,15 @@ namespace QuizLab3.ViewModel
         {
             this.model = model;
             this.Questions = new ObservableCollection<Question>(model.Questions);
+        }
+        public ObjectId Id
+        {
+            get => model.Id;
+            set
+            {
+                model.Id = value;
+                RaisePropertyChanged();
+            }
         }
         public string Name 
         {
