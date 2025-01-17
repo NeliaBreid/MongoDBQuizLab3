@@ -88,6 +88,7 @@ namespace QuizLab3.ViewModel
         public DelegateCommand DeleteCategoryCommand { get; }
         public DelegateCommand ClearCategoryNameCommand { get; }
         public DelegateCommand SaveQuestionCommand { get; }
+        public DelegateCommand SaveQuestionPackCommand { get; }
 
         public ConfigurationViewModel(MainWindowViewModel? mainWindowViewModel)
         {
@@ -106,11 +107,18 @@ namespace QuizLab3.ViewModel
             DeleteCategoryCommand = new DelegateCommand(RemoveCategory);
             ClearCategoryNameCommand = new DelegateCommand(ClearTextBox);
             SaveQuestionCommand = new DelegateCommand(SaveQuestion); //Avvakta
-
+            SaveQuestionPackCommand = new DelegateCommand(SaveQuestionPack); //Avvakta
 
             _categoryRepository = new CategoryRepository();
             _questionPackRepository = new QuestionPackRepository();
             LoadCategories();
+        }
+
+        private void SaveQuestionPack(object obj)
+        {
+            var packToSave = new QuestionPack(ActivePack.Name, ActivePack.Category, ActivePack.Difficulty, ActivePack.TimeLimitInSeconds);
+            
+            _questionPackRepository.UpdateQuestionPackInDb(packToSave); //TODO:Den här fungerar inte
         }
 
         private void SaveQuestion(object obj)
@@ -124,7 +132,6 @@ namespace QuizLab3.ViewModel
             );
                 ActiveQuestion = questionToSave;
 
-                // Använder correctanswer och query för att matcha den.. Superdålig metod
                 _questionPackRepository.UpdateQuestionInDb(ActivePack.Id, questionToSave);              
 
             }
@@ -183,7 +190,6 @@ namespace QuizLab3.ViewModel
                 {
                     _questionPackRepository.RemoveQuestionFromDb(ActivePack.Id, ActiveQuestion); // Tar bort frågan från databasen
                     ActivePack.Questions.Remove(ActiveQuestion);
-
                     RemoveQuestionsCommand.RaiseCanExecuteChanged();
                     mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
 
@@ -191,18 +197,6 @@ namespace QuizLab3.ViewModel
                     RaisePropertyChanged(nameof(ActivePack));
                 }
             }
-            //}
-            //ActiveQuestion = ActivePack?.Questions.LastOrDefault();
-
-            //if (ActivePack != null && ActiveQuestion != null)
-            //{
-            //    ActivePack.Questions.Remove(ActiveQuestion);
-            //    _questionPackRepository.RemoveQuestionFromDb(ActivePack.Id, ActiveQuestion.QuestionId);
-            //    RemoveQuestionsCommand.RaiseCanExecuteChanged();
-            //    mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
-            //}
-            //RaisePropertyChanged();
-            //RaisePropertyChanged(nameof(ActivePack));
         }
 
         private bool CanRemoveQuestionFromActivePack(object parameter)
@@ -216,7 +210,7 @@ namespace QuizLab3.ViewModel
 
             var newPack = new QuestionPackViewModel(questionPack);
             Packs.Add(newPack);
-
+           
             _questionPackRepository.AddQuestionPack(questionPack); //TODO: HJÄLP ELLER, category blir tokigt. Just nu läses inget in vid app start.
             mainWindowViewModel.ActivePack = newPack;
             RaisePropertyChanged(nameof(ActivePack));

@@ -22,7 +22,6 @@ namespace QuizLab3.ViewModel
 
         private bool _isPlayerMode = false;
 
-
         private bool _isConfigurationMode = true; 
 
         public QuestionPackViewModel? ActivePack

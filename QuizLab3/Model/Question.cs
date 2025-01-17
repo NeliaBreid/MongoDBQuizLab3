@@ -5,6 +5,10 @@ namespace QuizLab3.Model
 {
     public class Question 
     {
+        [BsonId]  // Primärnyckel för QuestionPack
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string QuestionId { get; set; } = ObjectId.GenerateNewId().ToString();
+
         [BsonElement("query")]
         public string Query { get; set; }
 
@@ -20,12 +24,14 @@ namespace QuizLab3.Model
         }
         public Question(string query, string correctAnswer, string[] incorrectAnswers) 
         {
+            QuestionId = ObjectId.GenerateNewId().ToString();
             Query = query;
             CorrectAnswer = correctAnswer;
             IncorrectAnswers = incorrectAnswers;
         }
         public Question(string query, string correctAnswer, string incorrectAnswer1, string incorrectAnswer2, string incorrectAnswer3)
         {
+            QuestionId = ObjectId.GenerateNewId().ToString();
             Query = query;
             CorrectAnswer = correctAnswer;
             IncorrectAnswers = new string[3] { incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 };

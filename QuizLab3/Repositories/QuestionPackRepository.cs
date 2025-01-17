@@ -16,11 +16,7 @@ namespace QuizLab3.Repositories
         
         public List<QuestionPack> GetAllQuestionPacks()
         {
-            //Hämtar alla Questionspacks från databasen
             var packs = _packsCollection.Find(_ => true).ToList();
-
-
-
             return packs;
         }
 
@@ -36,13 +32,13 @@ namespace QuizLab3.Repositories
             return allQuestions;
         }
 
-        public void UpdateQuestionInDb(ObjectId packId, Question newQuestion) //Man kan inte lägga till frågor med samma Query
+        public void UpdateQuestionInDb(ObjectId packId, Question newQuestion)
         {
             var filterPack = Builders<QuestionPack>.Filter.Eq(p => p.Id, packId);
 
             var filterQuestion = Builders<QuestionPack>.Filter.ElemMatch(
                 p => p.Questions,
-                q => q.Query == newQuestion.Query || q.CorrectAnswer == newQuestion.CorrectAnswer // Här matchar vi baserat på Query
+                q => q.QuestionId == newQuestion.QuestionId // Här matchar vi baserat på Query och korrektanswer
             );
 
             var combinedFilter = Builders<QuestionPack>.Filter.And(filterPack, filterQuestion);
@@ -52,7 +48,7 @@ namespace QuizLab3.Repositories
                 .Set("Questions.$.CorrectAnswer", newQuestion.CorrectAnswer)
                 .Set("Questions.$.IncorrectAnswers", newQuestion.IncorrectAnswers);
 
-            var result = _packsCollection.UpdateMany(combinedFilter, updateExistingQuestion);
+            var result = _packsCollection.UpdateOne(combinedFilter, updateExistingQuestion);
 
             if (result.MatchedCount == 0)
             {
@@ -61,18 +57,40 @@ namespace QuizLab3.Repositories
             }
         }
 
-        public void RemoveQuestionFromDb(ObjectId packId, Question questionToRemove)
+        public void RemoveQuestionFromDb(ObjectId packId, Question questionToRemove) //TODO: den här fungerar inte för tillfället
         {
+            var filterPack = Builders<QuestionPack>.Filter.Eq(p => p.Id, packId);
+
+            // Filtrera för att hitta den specifika frågan i arrayen som ska tas bort
+            var update = Builders<QuestionPack>.Update.PullFilter(
+                p => p.Questions, // Frågepaketet (arrayen)
+                q => q.QuestionId == questionToRemove.QuestionId // Här matchar vi på QuestionId
+            );
+
+            // Uppdatera QuestionPack och ta bort den matchande frågan
+            var result = _packsCollection.UpdateOne(filterPack, update);
 
         }
-        public void UpdateQuestionPack(QuestionPack updatedPack)
+        public void UpdateQuestionPackInDb(QuestionPack updatedPack)
         {
             var filter = Builders<QuestionPack>.Filter.Eq(p => p.Id, updatedPack.Id);
-            _packsCollection.ReplaceOne(filter, updatedPack);
-        }
+            var existingPack = _packsCollection.Find(p => p.Id == updatedPack.Id).FirstOrDefault();
+            // Uppdatera specifika fält istället för att ersätta hela dokumentet
+            var update = Builders<QuestionPack>.Update
+                .Set(p => p.Name, updatedPack.Name)
+                .Set(p => p.Category, updatedPack.Category)
+                .Set(p => p.Difficulty, updatedPack.Difficulty)
+                .Set(p => p.TimeLimitInSeconds, updatedPack.TimeLimitInSeconds)
+                .Set(p => p.Questions, updatedPack.Questions);
+
+            var result = _packsCollection.UpdateOne(filter, update);
+            if (result.MatchedCount > 0)
+            {
+            }
+            }
 
 
-        // Metod för att spara frågor
+
 
     } 
 }

@@ -64,6 +64,12 @@
                 Maximum="120"
                 Value="{Binding ActivePack.TimeLimitInSeconds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
+            <Button  
+            Content="Save"
+            FontSize="15"
+            Width="40" 
+            Height="20" 
+            Command="{Binding SaveQuestionPackCommand}"/>
 
         </StackPanel>
     </Grid>
