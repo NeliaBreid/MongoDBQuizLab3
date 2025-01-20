@@ -5,8 +5,7 @@ namespace QuizLab3.Model
 {
     public class Question 
     {
-        [BsonId]  // Primärnyckel för QuestionPack
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("questionId")]
         public string QuestionId { get; set; } = ObjectId.GenerateNewId().ToString();
 
         [BsonElement("query")]

@@ -1,4 +1,5 @@
-﻿using QuizLab3.Command;
+﻿using MongoDB.Bson;
+using QuizLab3.Command;
 using QuizLab3.Data;
 using QuizLab3.Model;
 using QuizLab3.Repositories;
@@ -29,13 +30,13 @@ namespace QuizLab3.ViewModel
         private Category? _newCategoryName; //TODO: ha denna prop?
 
        
-        public Category NewCategory
+        public Category CurrentCategory
         {
             get => _newCategoryName;
             set
             {
                 _newCategoryName = value;
-                RaisePropertyChanged(nameof(NewCategory));
+                RaisePropertyChanged(nameof(CurrentCategory));
             }
         }
 
@@ -45,7 +46,7 @@ namespace QuizLab3.ViewModel
             set
             {
                 _selectedCategoryToEdit = value;
-                NewCategory = value != null ? new Category { Id = value.Id, Name = value.Name } : new Category();
+                CurrentCategory = value != null ? new Category { Id = value.Id, Name = value.Name } : new Category();
                 RaisePropertyChanged(nameof(SelectedCategoryToEdit));
             }
         }
@@ -94,23 +95,31 @@ namespace QuizLab3.ViewModel
             UpdateCategoryCommand = new DelegateCommand(UpdateOrAddCategory, CanUpdateOrAddCategory);
             DeleteCategoryCommand = new DelegateCommand(RemoveCategory);
             ClearCategoryNameCommand = new DelegateCommand(ClearTextBox);
-            SaveQuestionCommand = new DelegateCommand(SaveQuestion); //Avvakta
-            SaveQuestionPackCommand = new DelegateCommand(SaveQuestionPack); //Avvakta
+            SaveQuestionCommand = new DelegateCommand(SaveChangesInQuestion); //Avvakta
+            SaveQuestionPackCommand = new DelegateCommand(SaveChangesInPack);
 
             _categoryRepository = new CategoryRepository();
             _questionPackRepository = new QuestionPackRepository();
             LoadCategories(); //TODO: sätta den här i början av allt.
         }
 
-        private void SaveQuestionPack(object obj)
+        private void SaveChangesInPack(object obj)
         {
-            var packToSave = new QuestionPack(ActivePack.Name, ActivePack.Category, ActivePack.Difficulty, ActivePack.TimeLimitInSeconds);
-            
-            _questionPackRepository.UpdateQuestionPackInDb(packToSave); //TODO:Den här fungerar inte
+            var packToSave = new QuestionPack
+            {
+                Id = ActivePack.Id, // Behåll det befintliga Id
+                Name = ActivePack.Name,
+                Category = ActivePack.Category,
+                Difficulty = ActivePack.Difficulty,
+                TimeLimitInSeconds = ActivePack.TimeLimitInSeconds,
+                Questions = ActivePack.Questions.ToList()
+            };
+
+            _questionPackRepository.UpdateQuestionPackInDb(packToSave); 
             mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
         }
 
-        private void SaveQuestion(object obj)
+        private void SaveChangesInQuestion(object obj)
         {
             if (ActiveQuestion != null)
             {
@@ -123,11 +132,10 @@ namespace QuizLab3.ViewModel
 
                 _questionPackRepository.UpdateQuestionInDb(ActivePack.Id, questionToSave);
                 mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
-
             }
         }
 
-        public void LoadCategories() //Laddar in Categorier, om det inte finns några Categorier så laddar den in default kategorier
+        public void LoadCategories() //TODO: flytta. Laddar in Categorier, om det inte finns några Categorier så laddar den in default kategorier
         {
             if (AllCategories == null)
             {
@@ -135,17 +143,6 @@ namespace QuizLab3.ViewModel
             }
                 AllCategories = new ObservableCollection<Category>(_categoryRepository.GetAllCategories());
             RaisePropertyChanged(nameof(AllCategories));
-
-        }
-        private void ClearTextBox(object parameter)
-        {
-            SelectedCategoryToEdit = null;
-            NewCategory.Name = string.Empty;
-        }
-        private void ClearNewCategory()
-        {
-            SelectedCategoryToEdit = null;
-            NewCategory.Name = string.Empty;
         }
         private void AddQuestionToActivePack(object parameter)
         {
@@ -157,8 +154,6 @@ namespace QuizLab3.ViewModel
             incorrectAnswer3: string.Empty);
 
             ActiveQuestion = newQuestion;
-
-            //ActivePack?.Questions.Add(newQuestion);
 
             RemoveQuestionsCommand.RaiseCanExecuteChanged();
             mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
@@ -232,31 +227,54 @@ namespace QuizLab3.ViewModel
             }
         }
 
-
-        private void UpdateOrAddCategory(object parameter)
+        //Allt som har med Categorier att göra----------------------------------------------------------------
+        private void ClearTextBox(object parameter)
         {
-            
-            if (SelectedCategoryToEdit != null)
+            SelectedCategoryToEdit = null;
+            CurrentCategory.Name = string.Empty;
+        }
+        private void ClearNewCategory()
+        {
+            SelectedCategoryToEdit = null;
+            CurrentCategory.Name = string.Empty;
+        }
+
+        private void UpdateOrAddCategory(object parameter) //TODO: Den här fungerar inte alls
+        {
+
+            if (string.IsNullOrEmpty(CurrentCategory.Name)) //Kan inte lämna den tom och trycka update
             {
-                // Uppdatera kategori om en kategori är vald
-                _categoryRepository.UpdateCategory(SelectedCategoryToEdit); //TODO: Få uppdateringen att fungera
-                
+                MessageBox.Show("Kategorins namn kan inte vara tomt.");
+                return;
             }
-            else if (!string.IsNullOrEmpty(NewCategory.Name)) //Det här villkoret funkar inte
+
+            if (CurrentCategory.Id == ObjectId.Empty) // Kontrollera om det är en ny kategori jämför på Id
             {
-                // Lägg till ny kategori om ingen kategori är vald
-                _categoryRepository.AddCategory(NewCategory);
+                var existingCategory = AllCategories.FirstOrDefault(c =>
+                    c.Name.Equals(CurrentCategory.Name, StringComparison.OrdinalIgnoreCase));
+
+                if (existingCategory != null) //Kan inte lägga till två av samma
+                {
+                    MessageBox.Show("En kategori med samma namn finns redan.");
+                    return;
+                }
                 
+                _categoryRepository.AddCategory(CurrentCategory); // Lägg till ny kategori
+                MessageBox.Show("Ny kategori har lagts till.");
+            }
+            else
+            {
+                _categoryRepository.UpdateCategory(CurrentCategory); // Uppdatera befintlig kategori
+                MessageBox.Show("Kategorin har uppdaterats.");
             }
 
             LoadCategories();
-            NewCategory.Name = string.Empty;
             ClearNewCategory();
         }
         private bool CanUpdateOrAddCategory(object parameter)
         {
             // Kan bara uppdatera eller lägga till om en kategori är vald eller en ny kategori finns
-            return SelectedCategoryToEdit != null || NewCategory != null;
+            return SelectedCategoryToEdit != null || CurrentCategory != null;
         }
         private void RemoveCategory(object parameter)
         {

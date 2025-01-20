@@ -34,16 +34,12 @@ namespace QuizLab3.Repositories
                 _categoriesCollection.DeleteOne(filter);
             }
 
-            //Om kategorin inte finns, händer inget
-
-            //Om kategorin finns, ta bort från databasen
         }
-        public void UpdateCategory(Category category)
+        public void UpdateCategory(Category category) //Uppdatera kategorin, Om den finns, matchat på Id så updaterar den existerande
         {
             if (category == null) return;
 
-            // Hitta den befintliga kategorin baserat på namn
-            var existingCategory = _categoriesCollection.Find(c => c.Name == category.Name).FirstOrDefault();
+            var existingCategory = _categoriesCollection.Find(c => c.Id == category.Id).FirstOrDefault();
 
             if (existingCategory != null)
             {
@@ -52,6 +48,7 @@ namespace QuizLab3.Repositories
                     var update = Builders<Category>.Update.Set(c => c.Name, category.Name);
                     var result =_categoriesCollection.UpdateOne(filter, update);
             }
+  
         }
         public void AddCategory(Category newCategory)
         {
@@ -63,24 +60,4 @@ namespace QuizLab3.Repositories
         }
 
     }
-    }
-
-//var existingCategory = _categoriesCollection.Find(c => c.Id == category.Id).FirstOrDefault();
-
-//if (newCategory != null)
-//{
-//    _categoriesCollection.InsertOne(newCategory);
-//}
-
-//else if (category != null) //det finns en sådan kategori med samma namn
-//{
-
-//    var filter = Builders<Category>.Filter.Eq(c => c.Id, existingCategory.Id);
-//    var update = Builders<Category>.Update.Set(c => c.Name, category.Name);
-//    _categoriesCollection.UpdateOne(filter, update);
-//}
-
-//else
-//{
-//    return;
-//}
+}

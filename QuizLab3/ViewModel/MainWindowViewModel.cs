@@ -151,7 +151,7 @@ namespace QuizLab3.ViewModel
 
         private void OpenCategoryDialog(object? obj)
         {
-            ConfigurationViewModel.NewCategory = new Category();
+            ConfigurationViewModel.CurrentCategory = new Category();
             EditCategoryDialog editCategoryDialog = new EditCategoryDialog();
             editCategoryDialog.ShowDialog();
         }
