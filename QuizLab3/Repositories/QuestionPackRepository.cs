@@ -19,18 +19,25 @@ namespace QuizLab3.Repositories
             var packs = _packsCollection.Find(_ => true).ToList();
             return packs;
         }
+        public List<Question> GetAllQuestionsInPack(ObjectId packId)
+        {
+            var pack = _packsCollection.Find(p => p.Id == packId).FirstOrDefault();
+            var result = pack?.Questions ?? new List<Question>();
+            return result;
+        }
 
         public void AddQuestionPack(QuestionPack newQuestionPack)
         {
              _packsCollection.InsertOne(newQuestionPack);
         }
-        public List<Question> GetAllQuestions()
-        {
-            var packs = GetAllQuestionPacks();  // Hämtar alla packs
-            var allQuestions = packs.SelectMany(pack => pack.Questions).ToList(); // Samlar alla frågor
 
-            return allQuestions;
-        }
+        //public List<Question> GetAllQuestions()
+        //{
+        //    var packs = GetAllQuestionPacks();  // Hämtar alla packs
+        //    var allQuestions = packs.SelectMany(pack => pack.Questions).ToList(); // Samlar alla frågor
+
+        //    return allQuestions;
+        //}
 
         public void UpdateQuestionInDb(ObjectId packId, Question newQuestion)
         {
@@ -71,7 +78,8 @@ namespace QuizLab3.Repositories
             var result = _packsCollection.UpdateOne(filterPack, update);
 
         }
-        public void UpdateQuestionPackInDb(QuestionPack updatedPack)
+        public void UpdateQuestionPackInDb(QuestionPack updatedPack) //Den här fungerar inte eftersom jag skapar som ett nytt pack kan
+            // jag inte jämföra id för det nya packet har noll i id. Försök istället ta det befintliga packet och bara uppdatera det.
         {
             var filter = Builders<QuestionPack>.Filter.Eq(p => p.Id, updatedPack.Id);
             var existingPack = _packsCollection.Find(p => p.Id == updatedPack.Id).FirstOrDefault();
@@ -89,6 +97,19 @@ namespace QuizLab3.Repositories
             }
             }
 
+        public void DeleteQuestionPack(ObjectId packIdToRemove)
+        {
+            var filter = Builders<QuestionPack>.Filter.Eq(p => p.Id, packIdToRemove);
+
+            // Ta bort dokumentet från databasen
+            var result = _packsCollection.DeleteOne(filter);
+
+            if (result.DeletedCount == 0)
+            {
+                throw new Exception("Inget frågepaket hittades att ta bort."); //TODO: Lägga sånt här överallt
+            }
+
+        }
 
 
 

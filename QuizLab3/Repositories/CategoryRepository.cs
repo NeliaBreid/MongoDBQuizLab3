@@ -50,8 +50,7 @@ namespace QuizLab3.Repositories
                 // Om vi har hittat en kategori men det är en annan (inte samma kategori) uppdaterar vi den
                     var filter = Builders<Category>.Filter.Eq(c => c.Id, existingCategory.Id);
                     var update = Builders<Category>.Update.Set(c => c.Name, category.Name);
-                    _categoriesCollection.UpdateOne(filter, update);
-
+                    var result =_categoriesCollection.UpdateOne(filter, update);
             }
         }
         public void AddCategory(Category newCategory)

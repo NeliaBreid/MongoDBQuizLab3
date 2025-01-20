@@ -1,9 +1,15 @@
 ﻿To do:
 1. Fixa så Update Categories fungerar
+2. Update packs så den fungerar (skrivit kommentar brevid)
 
-2. Ta bort Packs från databas
+3. Importera frågor från databas async
 
-3. Importera frågor från databas
-4. Ta bort frågor från databas
+Extra:
+- Flytta om kod, göra en till viewmodel? Ny repo för questions?
+- Gör så att det man skrivit i frågan försvinner om man byter fråga och inte klickat Save, kanske en Messageruta som säger (Har du glömt att spara?)
+- 
 
-
+Löst!
+- ta bort packs
+- lägga till packs
+- ta bort frågor

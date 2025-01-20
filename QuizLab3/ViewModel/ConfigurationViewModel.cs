@@ -28,19 +28,7 @@ namespace QuizLab3.ViewModel
 
         private Category? _newCategoryName; //TODO: ha denna prop?
 
-        private Category _selectedCategoryDisplay;
-        public Category SelectedCategoryDisplay
-        {
-            get => _selectedCategoryDisplay;
-            set
-            {
-                if (_selectedCategoryDisplay != value)
-                {
-                    _selectedCategoryDisplay = value;
-                    RaisePropertyChanged(nameof(SelectedCategoryDisplay));
-                }
-            }
-        }
+       
         public Category NewCategory
         {
             get => _newCategoryName;
@@ -111,7 +99,7 @@ namespace QuizLab3.ViewModel
 
             _categoryRepository = new CategoryRepository();
             _questionPackRepository = new QuestionPackRepository();
-            LoadCategories();
+            LoadCategories(); //TODO: sätta den här i början av allt.
         }
 
         private void SaveQuestionPack(object obj)
@@ -119,6 +107,7 @@ namespace QuizLab3.ViewModel
             var packToSave = new QuestionPack(ActivePack.Name, ActivePack.Category, ActivePack.Difficulty, ActivePack.TimeLimitInSeconds);
             
             _questionPackRepository.UpdateQuestionPackInDb(packToSave); //TODO:Den här fungerar inte
+            mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
         }
 
         private void SaveQuestion(object obj)
@@ -132,12 +121,13 @@ namespace QuizLab3.ViewModel
             );
                 ActiveQuestion = questionToSave;
 
-                _questionPackRepository.UpdateQuestionInDb(ActivePack.Id, questionToSave);              
+                _questionPackRepository.UpdateQuestionInDb(ActivePack.Id, questionToSave);
+                mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
 
             }
         }
 
-        public void LoadCategories()
+        public void LoadCategories() //Laddar in Categorier, om det inte finns några Categorier så laddar den in default kategorier
         {
             if (AllCategories == null)
             {
@@ -168,11 +158,14 @@ namespace QuizLab3.ViewModel
 
             ActiveQuestion = newQuestion;
 
-            ActivePack?.Questions.Add(newQuestion);
+            //ActivePack?.Questions.Add(newQuestion);
 
             RemoveQuestionsCommand.RaiseCanExecuteChanged();
             mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
-            RaisePropertyChanged(nameof(ActivePack)); 
+            RaisePropertyChanged(nameof(ActivePack));
+
+            _questionPackRepository.UpdateQuestionInDb(ActivePack.Id, newQuestion);//Ska uppdatera frågan eller lägga till den
+            mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
 
         }
         private bool CanAddQuestionToActivePack(object parameter)
@@ -189,12 +182,13 @@ namespace QuizLab3.ViewModel
                 if (ActiveQuestion != null)
                 {
                     _questionPackRepository.RemoveQuestionFromDb(ActivePack.Id, ActiveQuestion); // Tar bort frågan från databasen
-                    ActivePack.Questions.Remove(ActiveQuestion);
+                    //ActivePack.Questions.Remove(ActiveQuestion); //Behöver jag den här fortfarande?
                     RemoveQuestionsCommand.RaiseCanExecuteChanged();
                     mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
 
                     RaisePropertyChanged();
                     RaisePropertyChanged(nameof(ActivePack));
+                    mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
                 }
             }
         }
@@ -224,10 +218,12 @@ namespace QuizLab3.ViewModel
 
             if (ActivePack != null && Packs.Contains(ActivePack) && result == MessageBoxResult.Yes)
             {
-                Packs.Remove(ActivePack);
+                _questionPackRepository.DeleteQuestionPack(ActivePack.Id);
+                                    
                 mainWindowViewModel.ActivePack = null;
                 DeleteQuestionPacksCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged(nameof(ActivePack));
+               mainWindowViewModel.LoadQuestionPacks(); 
             }
 
             else if (result == MessageBoxResult.No)
@@ -239,6 +235,7 @@ namespace QuizLab3.ViewModel
 
         private void UpdateOrAddCategory(object parameter)
         {
+            
             if (SelectedCategoryToEdit != null)
             {
                 // Uppdatera kategori om en kategori är vald

@@ -42,7 +42,7 @@
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
             <Label Content="Edit Category" FontWeight="Bold" Margin="0,0,0,5"/>
             <StackPanel Orientation="Horizontal">
-                <TextBox Width="150" Height="25" Text="{Binding NewCategory.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,5,5"/>
+                <TextBox Width="150" Height="25" Text="{Binding SelectedCategoryToEdit.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,5,5"/>
                 <Button Content="Clear" Width="40" Height="25" Margin="0,0,0,5" Command="{Binding ClearCategoryNameCommand}"/>
             </StackPanel>
         </StackPanel>

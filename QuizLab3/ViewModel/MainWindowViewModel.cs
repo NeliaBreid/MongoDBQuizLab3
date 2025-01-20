@@ -93,11 +93,12 @@ namespace QuizLab3.ViewModel
             _questionPackRepository = new QuestionPackRepository();
 
         }
-        public void LoadQuestionPacks()
+        public void LoadQuestionPacks() 
         {
             var questionPacks = _questionPackRepository.GetAllQuestionPacks();
 
             if (questionPacks == null || !questionPacks.Any()) //Kollar om det finns något i databasen, om tom så går den in och gör default
+                //Måste fixa ett bättre villkor
             {
                 var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); 
                 ActivePack = new QuestionPackViewModel(defaultPack);;
@@ -108,17 +109,27 @@ namespace QuizLab3.ViewModel
                 var loadedPacks= new ObservableCollection<QuestionPackViewModel>(
                     questionPacks.Select(pack => new QuestionPackViewModel(pack))); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
 
-                _questionPackRepository.GetAllQuestions();//TODO: kolla om den här fungerar
-
-                foreach (var pack in loadedPacks)
+                Packs.Clear();
+                foreach (var pack in loadedPacks) //Här blir det helt tokigt och den lägger till Packs som inte finns?
                 {
                     Packs.Add(pack);
                 }
 
                 ActivePack = Packs.First();
+                LoadQuestionsInPack();//TODO: kolla om den här fungerar
 
             }
+        }
 
+        public void LoadQuestionsInPack()
+        {
+            var questions = _questionPackRepository.GetAllQuestionsInPack(ActivePack.Id);
+
+            ActivePack.Questions.Clear();
+            foreach (var question in questions)
+            {
+                ActivePack.Questions.Add(question);
+            }
         }
 
         private void OpenNewPackDialog(object obj)
