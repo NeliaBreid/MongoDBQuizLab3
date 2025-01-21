@@ -5,6 +5,7 @@ namespace QuizLab3.Model
 {
     public class Question 
     {
+
         [BsonElement("questionId")]
         public string QuestionId { get; set; } = ObjectId.GenerateNewId().ToString();
 
@@ -36,6 +37,12 @@ namespace QuizLab3.Model
             IncorrectAnswers = new string[3] { incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 };
         }
 
-
+        public Question(string questionId, string query, string correctAnswer, string[] incorrectAnswers)
+        {
+            QuestionId = questionId;
+            Query = query;
+            CorrectAnswer = correctAnswer;
+            IncorrectAnswers = incorrectAnswers;
+        }
     }
 }

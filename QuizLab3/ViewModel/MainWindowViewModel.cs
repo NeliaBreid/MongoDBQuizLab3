@@ -12,6 +12,8 @@ namespace QuizLab3.ViewModel
 {
     class MainWindowViewModel : ViewModelBase
     {
+        private readonly QuestionPackRepository _questionPackRepository;
+        private readonly QuestionRepository _questionRepository;
         public ObservableCollection<QuestionPackViewModel> Packs { get; set; }
         public List<Question> ShuffledQuestions { get; set; }
         public List<Question> ShuffledAnswers { get; set; }
@@ -57,7 +59,6 @@ namespace QuizLab3.ViewModel
 
             }
         }
- 
         public DelegateCommand NewPackDialog { get; }
         public DelegateCommand PackOptionsDialog { get; }
         public DelegateCommand EditCategoryDialog { get; }
@@ -65,11 +66,13 @@ namespace QuizLab3.ViewModel
         public DelegateCommand ShowConfigurationViewCommand { get; }
         public DelegateCommand ShowPlayerViewCommand { get; }
         public DelegateCommand FullScreenCommand { get; }
-
      
-        private readonly QuestionPackRepository _questionPackRepository;
+
         public MainWindowViewModel()
         {
+            _questionPackRepository = new QuestionPackRepository();
+            _questionRepository = new QuestionRepository();
+
             Packs = new ObservableCollection<QuestionPackViewModel>();
 
             PlayerViewModel = new PlayerViewModel(this);
@@ -90,19 +93,18 @@ namespace QuizLab3.ViewModel
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
 
-            _questionPackRepository = new QuestionPackRepository();
 
         }
-        public void LoadQuestionPacks() 
+        public async void LoadQuestionPacks() 
         {
-            var questionPacks = _questionPackRepository.GetAllQuestionPacks();
+            var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
 
             if (questionPacks == null || !questionPacks.Any()) //Kollar om det finns något i databasen, om tom så går den in och gör default
                 //Måste fixa ett bättre villkor
             {
-                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); 
+                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); //Den ska vara synkron
                 ActivePack = new QuestionPackViewModel(defaultPack);;
-                Packs.Add(ActivePack);
+                Packs.Add(ActivePack); //TODO: Behövs den här?
             }
             else
             {
@@ -121,9 +123,9 @@ namespace QuizLab3.ViewModel
             }
         }
 
-        public void LoadQuestionsInPack()
+        public async void LoadQuestionsInPack()
         {
-            var questions = _questionPackRepository.GetAllQuestionsInPack(ActivePack.Id);
+            var questions = await _questionRepository.GetAllQuestionsInPackAsync(ActivePack.Id);
 
             ActivePack.Questions.Clear();
             foreach (var question in questions)
@@ -138,26 +140,25 @@ namespace QuizLab3.ViewModel
 
             CreateNewPackDialog createNewPackDialog = new CreateNewPackDialog();
             createNewPackDialog.ShowDialog();
-
         }
 
         private void OpenPackOptionsDialog(object? obj)
         {
-            //ConfigurationViewModel.NewQuestionPack = new QuestionPack(" ");
             PackOptionsDialog newPackOptionsDialog = new PackOptionsDialog();
-
             newPackOptionsDialog.ShowDialog();
         }
 
         private void OpenCategoryDialog(object? obj)
         {
             ConfigurationViewModel.CurrentCategory = new Category();
+
             EditCategoryDialog editCategoryDialog = new EditCategoryDialog();
             editCategoryDialog.ShowDialog();
         }
+
         private void SetActivePack(object? obj)
         {
-            ActivePack = (QuestionPackViewModel)obj;
+            ActivePack = (QuestionPackViewModel)obj; //TODO: Vad gör den här?
 
             RaisePropertyChanged(nameof(ActivePack));
         }
@@ -188,7 +189,6 @@ namespace QuizLab3.ViewModel
         {
             return !_isPlayerMode && ActivePack.Questions.Any();
         }
-
         private void SetFullScreen(object? obj)
         {
             var window = App.Current.MainWindow;
@@ -206,17 +206,12 @@ namespace QuizLab3.ViewModel
                 window.WindowState = WindowState.Normal;
             }
         }
-
         public void ShowResultView()
         {
             PlayerViewModel._timer.Stop();
             ResultDialog createResultDialog = new ResultDialog();
             createResultDialog.ShowDialog();
         }
-
-
-
-        
     }
 }
 

@@ -34,16 +34,6 @@ namespace QuizLab3.Data
             var packCount = context.QuestionPacks.CountDocuments(_ => true);
             if (packCount == 0)
             {
-                //Om Category category
-                //// Hämta en befintlig kategori från databasen, t.ex. "Sport"
-                //var sportCategory = context.Categories.Find(c => c.Name == "Sport").FirstOrDefault();
-
-                //// Om kategorin inte finns, skapa den
-                //if (sportCategory == null)
-                //{
-                //    sportCategory = new Category("Sport");
-                //    context.Categories.InsertOne(sportCategory);
-                //}
 
                 var defaultQuestionPack = new QuestionPack
                 {
