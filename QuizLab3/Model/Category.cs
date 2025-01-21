@@ -6,7 +6,7 @@ namespace QuizLab3.Model
     public class Category
     {
         [BsonId]
-        public ObjectId Id { get; set; }//???
+        public ObjectId Id { get; set; }
 
         [BsonElement("categoryName")]
         public string Name { get; set; }
@@ -16,11 +16,11 @@ namespace QuizLab3.Model
             Name = name;
 
         }
-        public Category() 
+        public Category()
         {
 
         }
 
     }
-    
+
 }

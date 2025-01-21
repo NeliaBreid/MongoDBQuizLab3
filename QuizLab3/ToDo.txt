@@ -1,13 +1,6 @@
 ﻿To do:
-3. Importera frågor från databas async
-
-Extra:
-- Flytta om kod, göra en till viewmodel? Ny repo för questions?
-- Gör så att det man skrivit i frågan försvinner om man byter fråga och inte klickat Save, kanske en Messageruta som säger (Har du glömt att spara?)
-- 
-
-Löst!
-- ta bort packs
-- lägga till packs
-- ta bort frågor
-- UpdatePacks fungerar
+- Flytta ut till en QuestionViewModel
+- Lägg till Try Catch i databashantering
+- Kolla över variabelnamn
+- Kolla över funktionnamn
+- Flytta om funktioner och variabler

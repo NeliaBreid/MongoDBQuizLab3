@@ -7,6 +7,7 @@ namespace QuizLab3.Data
     {
         public static void SetDefaultCategory() //TODO:Gör säkerhetsnät ifall det redan finns
         {
+            
             var context = new QuizDbContext();
 
             // Check if the collection contains any categories

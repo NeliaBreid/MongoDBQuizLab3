@@ -13,11 +13,12 @@ namespace QuizLab3.Repositories
             var connection = new QuizDbContext();
             _packsCollection = connection.QuestionPacks;
         }
-        
         public async Task<List<QuestionPack>> GetAllQuestionPacksAsync()
         {
             var packs = await _packsCollection.Find(_ => true).ToListAsync();
+           
             return packs;
+
         }
 
         public async Task AddQuestionPackAsync(QuestionPack newQuestionPack)
@@ -42,13 +43,22 @@ namespace QuizLab3.Repositories
 
         public async Task DeleteQuestionPackAsync(ObjectId packIdToRemove)
         {
+            try
+            {
+
             var filter = Builders<QuestionPack>.Filter.Eq(p => p.Id, packIdToRemove);
 
             var result = await _packsCollection.DeleteOneAsync(filter);
 
             if (result.DeletedCount == 0)
             {
-                throw new Exception("Inget frågepaket hittades att ta bort."); //TODO: Lägga sånt här överallt
+                throw new Exception("Inget frågepaket hittades att ta bort.");
+            }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("An error occurred while deleting the question pack.", ex);
             }
         }
     } 

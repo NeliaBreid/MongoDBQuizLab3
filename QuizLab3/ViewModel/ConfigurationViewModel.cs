@@ -100,6 +100,7 @@ namespace QuizLab3.ViewModel
             ClearCategoryNameCommand = new DelegateCommand(ClearTextBox);
 
             LoadCategories(); //TODO: sätta den här i början av allt.
+            
 
             AddQuestionsCommand = new DelegateCommand(AddQuestionToActivePack, CanAddQuestionToActivePack);
             RemoveQuestionsCommand = new DelegateCommand(RemoveQuestionFromActivePack, CanRemoveQuestionFromActivePack);
@@ -215,12 +216,22 @@ namespace QuizLab3.ViewModel
 
             if (ActivePack != null && Packs.Contains(ActivePack) && result == MessageBoxResult.Yes)
             {
+                try 
+                {
+
                 await _questionPackRepository.DeleteQuestionPackAsync(ActivePack.Id);
                                     
                 mainWindowViewModel.ActivePack = null; //TODO: Vad händer om man tar bort den här?
                 DeleteQuestionPacksCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged(nameof(ActivePack));
-                mainWindowViewModel.LoadQuestionPacks(); 
+                mainWindowViewModel.Packs.Clear();
+                mainWindowViewModel.LoadQuestionPacks();
+                    
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show($"Error deleting questionpack:{ex.Message}", "Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                }
             }
 
             else if (result == MessageBoxResult.No)

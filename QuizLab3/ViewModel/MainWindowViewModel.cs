@@ -17,14 +17,14 @@ namespace QuizLab3.ViewModel
         public ObservableCollection<QuestionPackViewModel> Packs { get; set; }
         public List<Question> ShuffledQuestions { get; set; }
         public List<Question> ShuffledAnswers { get; set; }
-        public PlayerViewModel PlayerViewModel { get; } 
+        public PlayerViewModel PlayerViewModel { get; }
         public ConfigurationViewModel ConfigurationViewModel { get; }
 
         private QuestionPackViewModel? _activePack;
 
         private bool _isPlayerMode = false;
 
-        private bool _isConfigurationMode = true; 
+        private bool _isConfigurationMode = true;
 
         public QuestionPackViewModel? ActivePack
         {
@@ -66,7 +66,7 @@ namespace QuizLab3.ViewModel
         public DelegateCommand ShowConfigurationViewCommand { get; }
         public DelegateCommand ShowPlayerViewCommand { get; }
         public DelegateCommand FullScreenCommand { get; }
-     
+
 
         public MainWindowViewModel()
         {
@@ -93,32 +93,43 @@ namespace QuizLab3.ViewModel
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
 
+            LoadDefaultValues();
+
 
         }
-        public async void LoadQuestionPacks() 
+        public async void LoadQuestionPacks()
+        {
+            Packs.Clear();
+            var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
+
+
+            if (!questionPacks.Any())
+            {
+                return;
+            }
+
+            var loadedPacks = new ObservableCollection<QuestionPackViewModel>(
+                questionPacks.Select(pack => new QuestionPackViewModel(pack))); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
+
+            foreach (var pack in loadedPacks) //Här blir det helt tokigt och den lägger till Packs som inte finns?
+            {
+                Packs.Add(pack);
+            }
+
+            ActivePack = Packs.First();
+            LoadQuestionsInPack();//TODO: kolla om den här fungerar
+
+
+        }
+        public async void LoadDefaultValues()
         {
             var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
 
-            if (questionPacks == null || !questionPacks.Any()) //Kollar om det finns något i databasen, om tom så går den in och gör default
-                //Måste fixa ett bättre villkor
+            if (!questionPacks.Any())
             {
                 var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); //Den ska vara synkron
-                ActivePack = new QuestionPackViewModel(defaultPack);;
+                ActivePack = new QuestionPackViewModel(defaultPack); 
                 Packs.Add(ActivePack); //TODO: Behövs den här?
-            }
-            else
-            {
-                var loadedPacks= new ObservableCollection<QuestionPackViewModel>(
-                    questionPacks.Select(pack => new QuestionPackViewModel(pack))); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
-
-                Packs.Clear();
-                foreach (var pack in loadedPacks) //Här blir det helt tokigt och den lägger till Packs som inte finns?
-                {
-                    Packs.Add(pack);
-                }
-
-                ActivePack = Packs.First();
-                LoadQuestionsInPack();//TODO: kolla om den här fungerar
 
             }
         }
@@ -175,7 +186,7 @@ namespace QuizLab3.ViewModel
             ShowConfigurationViewCommand.RaiseCanExecuteChanged();
             ShowPlayerViewCommand.RaiseCanExecuteChanged();
         }
-      
+
         private void ShowPlayerView(object? obj)
         {
             IsConfigurationMode = false;
