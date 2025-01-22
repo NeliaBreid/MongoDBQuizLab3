@@ -18,7 +18,7 @@ namespace QuizLab3.ViewModel
 
         public QuestionPackViewModel? ActivePack{ get => mainWindowViewModel?.ActivePack;}
         public ObservableCollection<QuestionPackViewModel> Packs { get => mainWindowViewModel.Packs; }
-        public  ObservableCollection<Category> AllCategories { get; set; } //TODO: fixa en metod som lägge till kategorierna här
+        public  ObservableCollection<Category> AllCategories { get; set; } 
 
         private readonly MainWindowViewModel? mainWindowViewModel;
 
@@ -68,7 +68,6 @@ namespace QuizLab3.ViewModel
                 RaisePropertyChanged();
             }
         }
-
         public DelegateCommand AddQuestionsCommand { get; }
         public DelegateCommand RemoveQuestionsCommand { get; }
         public DelegateCommand CreateQuestionPacksCommand { get; }
@@ -99,16 +98,21 @@ namespace QuizLab3.ViewModel
 
             ClearCategoryNameCommand = new DelegateCommand(ClearTextBox);
 
-            LoadCategories(); //TODO: sätta den här i början av allt.
-            
-
             AddQuestionsCommand = new DelegateCommand(AddQuestionToActivePack, CanAddQuestionToActivePack);
             RemoveQuestionsCommand = new DelegateCommand(RemoveQuestionFromActivePack, CanRemoveQuestionFromActivePack);
             SaveQuestionPackCommand = new DelegateCommand(SaveChangesInPack);
+
+            LoadCategories(); //TODO: sätta den här i början av allt.
         }
 
         private async void SaveChangesInPack(object obj)
         {
+            if (ActivePack == null)
+            {
+                MessageBox.Show("You got to choose a pack to edit");
+            }
+            else
+            {
             var packToSave = new QuestionPack
             {
                 Id = ActivePack.Id, // Behåll det befintliga Id
@@ -118,8 +122,12 @@ namespace QuizLab3.ViewModel
                 TimeLimitInSeconds = ActivePack.TimeLimitInSeconds,
                 Questions = ActivePack.Questions.ToList()
             };
-           await _questionPackRepository.UpdateQuestionPackInDbAsync(packToSave); 
+
+            await _questionPackRepository.UpdateQuestionPackInDbAsync(packToSave);
             mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
+                
+            }
+        
         }
 
         private async void SaveChangesInQuestion(object obj)
@@ -138,7 +146,7 @@ namespace QuizLab3.ViewModel
             }
         }
 
-        public async void LoadCategories() //TODO: flytta. Laddar in Categorier, om det inte finns några Categorier så laddar den in default kategorier
+        public async void LoadCategories() //TODO: flytta.
         {
             if (AllCategories == null)
             {
@@ -152,26 +160,27 @@ namespace QuizLab3.ViewModel
         }
         private async void AddQuestionToActivePack(object parameter)
         {
-            var newQuestion = new Question(
-            query: "New Question",
-            correctAnswer: string.Empty,
-            incorrectAnswer1: string.Empty,
-            incorrectAnswer2: string.Empty,
-            incorrectAnswer3: string.Empty);
+            if (ActivePack!= null)
+            {
+                var newQuestion = new Question(
+                    query: "New Question",
+                    correctAnswer: string.Empty,
+                    incorrectAnswer1: string.Empty,
+                    incorrectAnswer2: string.Empty,
+                    incorrectAnswer3: string.Empty);
 
-            ActiveQuestion = newQuestion;
+                ActiveQuestion = newQuestion;
 
-            RemoveQuestionsCommand.RaiseCanExecuteChanged();
-            mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
-            RaisePropertyChanged(nameof(ActivePack));
+                mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
+                RaisePropertyChanged(nameof(ActivePack));
+                await _questionRepository.UpdateQuestionInDbAsync(ActivePack.Id, newQuestion);//Ska uppdatera frågan eller lägga till den
+                mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
 
-            await _questionRepository.UpdateQuestionInDbAsync(ActivePack.Id, newQuestion);//Ska uppdatera frågan eller lägga till den
-            mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
-
+            }
         }
         private bool CanAddQuestionToActivePack(object parameter)
         {
-            return true;//ActivePack != null; //TODO: DEN HÄR SLUTADE FUNGERA
+            return ActivePack != null; //TODO: DEN HÄR SLUTADE FUNGERA
            
         }
         private async void RemoveQuestionFromActivePack(object parameter)
@@ -183,18 +192,18 @@ namespace QuizLab3.ViewModel
                 if (ActiveQuestion != null)
                 {
                     await _questionRepository.RemoveQuestionFromDbAsync(ActivePack.Id, ActiveQuestion); // Tar bort frågan från databasen
-                    RemoveQuestionsCommand.RaiseCanExecuteChanged();
                     mainWindowViewModel?.ShowPlayerViewCommand.RaiseCanExecuteChanged();
-
+                    ActivePack.Questions.Clear();
                     RaisePropertyChanged(nameof(ActivePack));
                     mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
+                    
                 }
             }
         }
 
-        private bool CanRemoveQuestionFromActivePack(object parameter)
+        private bool CanRemoveQuestionFromActivePack(object parameter) 
         {
-            return true; // ActivePack != null && ActivePack.Questions.Any(); //TODO: DEN HÄR SLUTADE FUNGERA
+            return ActivePack != null && ActivePack.Questions.Any(); //TODO: DEN HÄR SLUTADE FUNGERA 
         }
 
         private async void CreatePack(object? parameter)
@@ -204,8 +213,9 @@ namespace QuizLab3.ViewModel
             var newPack = new QuestionPackViewModel(questionPack);
             Packs.Add(newPack);
            
-            await _questionPackRepository.AddQuestionPackAsync(questionPack); //TODO: HJÄLP ELLER, category blir tokigt. Just nu läses inget in vid app start.
+            await _questionPackRepository.AddQuestionPackAsync(questionPack);
             mainWindowViewModel.ActivePack = newPack;
+            AddQuestionsCommand.RaiseCanExecuteChanged();
             RaisePropertyChanged(nameof(ActivePack));
         }
 
@@ -222,7 +232,7 @@ namespace QuizLab3.ViewModel
                 await _questionPackRepository.DeleteQuestionPackAsync(ActivePack.Id);
                                     
                 mainWindowViewModel.ActivePack = null; //TODO: Vad händer om man tar bort den här?
-                DeleteQuestionPacksCommand.RaiseCanExecuteChanged();
+                AddQuestionsCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged(nameof(ActivePack));
                 mainWindowViewModel.Packs.Clear();
                 mainWindowViewModel.LoadQuestionPacks();
@@ -256,7 +266,7 @@ namespace QuizLab3.ViewModel
         {
             if (string.IsNullOrEmpty(CurrentCategory.Name)) //Kan inte lämna den tom och trycka update
             {
-                MessageBox.Show("Kategorins namn kan inte vara tomt.");
+                MessageBox.Show("You have to give the category a name");
                 return;
             }
 
@@ -267,7 +277,7 @@ namespace QuizLab3.ViewModel
 
                 if (existingCategory != null) //Kan inte lägga till två av samma
                 {
-                    MessageBox.Show("En kategori med samma namn finns redan.");
+                    MessageBox.Show("A category with this name already exists.");
                     return;
                 }
  

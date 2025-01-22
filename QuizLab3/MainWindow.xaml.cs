@@ -15,16 +15,7 @@ namespace QuizLab3
             InitializeComponent();
 
             DataContext = viewModel = new MainWindowViewModel();
-            Loaded += MainWindow_Loaded;
             
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            viewModel.LoadQuestionPacks();
-
-            //TODO: 
-
         }
     }
 }

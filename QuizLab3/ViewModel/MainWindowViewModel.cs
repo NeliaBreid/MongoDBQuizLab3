@@ -34,6 +34,8 @@ namespace QuizLab3.ViewModel
                 _activePack = value;
                 RaisePropertyChanged(nameof(ActivePack));
                 ConfigurationViewModel?.RaisePropertyChanged();
+                ConfigurationViewModel?.RemoveQuestionsCommand.RaiseCanExecuteChanged();
+
 
             }
         }
@@ -94,7 +96,7 @@ namespace QuizLab3.ViewModel
             FullScreenCommand = new DelegateCommand(SetFullScreen);
 
             LoadDefaultValues();
-
+            LoadQuestionPacks();
 
         }
         public async void LoadQuestionPacks()
@@ -102,23 +104,21 @@ namespace QuizLab3.ViewModel
             Packs.Clear();
             var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
 
-
             if (!questionPacks.Any())
             {
                 return;
             }
 
             var loadedPacks = new ObservableCollection<QuestionPackViewModel>(
-                questionPacks.Select(pack => new QuestionPackViewModel(pack))); //TODO: tanke, så länge det sparas ner som questionpacks så kanske det går bra att hämta dom som Questionpackviewmodel?
+                questionPacks.Select(pack => new QuestionPackViewModel(pack))); 
 
-            foreach (var pack in loadedPacks) //Här blir det helt tokigt och den lägger till Packs som inte finns?
+            foreach (var pack in loadedPacks) 
             {
                 Packs.Add(pack);
             }
 
             ActivePack = Packs.First();
-            LoadQuestionsInPack();//TODO: kolla om den här fungerar
-
+            LoadQuestionsInPack();
 
         }
         public async void LoadDefaultValues()
@@ -127,9 +127,11 @@ namespace QuizLab3.ViewModel
 
             if (!questionPacks.Any())
             {
-                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack(); //Den ska vara synkron
+                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack();
                 ActivePack = new QuestionPackViewModel(defaultPack); 
                 Packs.Add(ActivePack); //TODO: Behövs den här?
+                ConfigurationViewModel.RemoveQuestionsCommand.RaiseCanExecuteChanged();
+                ConfigurationViewModel.AddQuestionsCommand.RaiseCanExecuteChanged();
 
             }
         }
@@ -137,12 +139,14 @@ namespace QuizLab3.ViewModel
         public async void LoadQuestionsInPack()
         {
             var questions = await _questionRepository.GetAllQuestionsInPackAsync(ActivePack.Id);
-
+            
             ActivePack.Questions.Clear();
             foreach (var question in questions)
             {
                 ActivePack.Questions.Add(question);
             }
+            ConfigurationViewModel.RemoveQuestionsCommand.RaiseCanExecuteChanged();
+            ConfigurationViewModel.AddQuestionsCommand.RaiseCanExecuteChanged();
         }
 
         private void OpenNewPackDialog(object obj)
@@ -198,7 +202,11 @@ namespace QuizLab3.ViewModel
         }
         private bool CanShowPlayerView(object? arg)
         {
-            return !_isPlayerMode && ActivePack.Questions.Any();
+            if (ActivePack!= null)
+            { 
+                return !_isPlayerMode && ActivePack.Questions.Any();
+            }
+            return false;
         }
         private void SetFullScreen(object? obj)
         {
