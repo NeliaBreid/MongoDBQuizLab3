@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuizLab3.Dialogs"
         mc:Ignorable="d"
+        Icon="/icon/celebrate.ico"
         WindowStartupLocation="CenterScreen"
-        Title="ResultDialog" Height="280" Width="260" ResizeMode="NoResize" Background="Lavender">
+        Title="Congratulations" Height="280" Width="260" ResizeMode="NoResize" Background="Lavender">
     <Grid>
         <StackPanel Margin="10" HorizontalAlignment="Center" VerticalAlignment="center">
             <TextBlock Text="You completed the Quiz!" Margin="5" FontWeight="Bold"  FontSize="18"/>
@@ -18,7 +19,16 @@
                 <TextBlock Text=" correct" FontSize="15"/>
 
             </StackPanel>
-            <Button Content="Go Back" Margin="20" Width="150" Height="70" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Command="{Binding ShowConfigurationViewCommand}" Click="Button_Click"/>
+            <Button 
+                FontWeight="DemiBold"
+                Padding="2"
+                Content="Go Back"
+                Margin="20" 
+                Width="150" 
+                Height="70"
+                FontSize="18" 
+                HorizontalAlignment="Center" 
+                Command="{Binding ShowConfigurationViewCommand}" Click="Button_Click"/>
         </StackPanel>
 
     </Grid>

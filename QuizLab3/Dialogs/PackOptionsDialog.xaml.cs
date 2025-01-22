@@ -12,5 +12,10 @@ namespace QuizLab3.Dialogs
             InitializeComponent();
             DataContext = App.Current.MainWindow.DataContext;
         }
+
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

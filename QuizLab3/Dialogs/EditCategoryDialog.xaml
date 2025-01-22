@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuizLab3.Dialogs"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Edit Category" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
+        Title="Edit Categories" Height="325" Width="260" ResizeMode="NoResize" Background="Lavender">
 
     <Grid Margin="10" DataContext="{Binding ConfigurationViewModel}">
         <Grid.RowDefinitions>
@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         
-            <Label Content="Choose Category" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,5"/>
+            <Label Content="Choose Category to edit:" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,5"/>
 
         <ListBox Grid.Row="1" Height="150" Margin="0,0,0,10"
                  SelectionMode="Single" 
@@ -26,11 +26,13 @@
 
             <ListBox.Template>
                 <ControlTemplate TargetType="ListBox">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <Border Background="{TemplateBinding Background}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsPresenter />
                     </ScrollViewer>
+                    </Border>
                 </ControlTemplate>
-                </ListBox.Template>
+            </ListBox.Template>
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -40,17 +42,45 @@
         </ListBox>
 
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
-            <Label Content="Edit Category" FontWeight="Bold" Margin="0,0,0,5"/>
+            <Label Content="Edit or add Category:" FontWeight="Bold" Margin="0,0,0,5"/>
             <StackPanel Orientation="Horizontal">
                 <TextBox Width="150" Height="25" Text="{Binding CurrentCategory.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,5,5"/>
-                <Button Content="Clear" Width="40" Height="25" Margin="0,0,0,5" Command="{Binding ClearCategoryNameCommand}"/>
+                <Button 
+                    FontWeight="DemiBold"
+                    Padding="2"
+                    Content="Clear" 
+                    Width="40" 
+                    Margin="0,0,0,5" Command="{Binding ClearCategoryNameCommand}"/>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Update" Width="60" Margin="5" Command="{Binding UpdateCategoryCommand}"/>
-            <Button Content="Remove" Width="60" Margin="5" Command="{Binding DeleteCategoryCommand}"/>
-            <Button Content="Cancel" Width="60" Margin="5"  Click="Button_Click"/>
+            <Button 
+                FontSize="12"
+                FontWeight="DemiBold"
+                Padding="2"
+                Content="Update/Add" 
+                Width="75" 
+                Margin="5" 
+                Command="{Binding UpdateCategoryCommand}"/>
+            
+            <Button 
+                FontSize="12"
+                FontWeight="DemiBold"
+                Padding="2"
+                Content="Remove" 
+                Width="60" 
+                Margin="5" 
+                Command="{Binding DeleteCategoryCommand}"/>
+            
+            <Button 
+                FontSize="12"
+                FontWeight="DemiBold"
+                Padding="2"
+                Content="Cancel" 
+                Width="60" 
+                Margin="5"  
+                Click="Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>

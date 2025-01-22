@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace QuizLab3.ViewModel
 {
-    class QuestionPackViewModel: ViewModelBase
+    public class QuestionPackViewModel: ViewModelBase
     {
         private readonly QuestionPack model; 
         public QuestionPackViewModel(QuestionPack model)

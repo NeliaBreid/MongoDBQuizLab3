@@ -13,21 +13,23 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-            <Grid>
-        
+    <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="101*"/>
+            <ColumnDefinition Width="224*"/>
+            <ColumnDefinition Width="325*"/>
         </Grid.ColumnDefinitions>
 
-        <Label  Grid.Column="0" Grid.Row="0" Margin="5" FontWeight="Bold" Content="{Binding ActivePack.Name, Mode=TwoWay}"/>
+        <Label  Grid.Column="0" Grid.Row="0" Margin="5,5,5,5" FontWeight="Bold" Content="{Binding ActivePack.Name, Mode=TwoWay}" Grid.ColumnSpan="2"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left" Grid.Column="1" Margin="125,0,0,0" Width="92">
+            
             <Button 
               FontSize="15"
               Width="18" 
@@ -38,6 +40,7 @@
               Background="Lavender">
                 <fa:IconBlock Icon="PenFancy" Foreground="Black"/>
             </Button>
+            
             <Button 
                 FontSize="15"
                 Width="18" 
@@ -70,53 +73,56 @@
                 Background="Lavender">
                 <fa:IconBlock Icon="Minus" Foreground="Black"/>
             </Button>
-        
+
         </StackPanel>
-            <ListBox
+        <ListBox
                  Grid.Column="0" 
-                 Grid.Row="2" 
+                 Grid.Row="1" 
                  SelectionMode="Extended" 
                  SelectedItem="{Binding ActiveQuestion, Mode=TwoWay}"
-                 ItemsSource="{Binding ActivePack.Questions, Mode=TwoWay}">
+                 ItemsSource="{Binding ActivePack.Questions, Mode=TwoWay}" Grid.ColumnSpan="2">
 
-        <ListBox.ItemTemplate> 
-        <DataTemplate>
-            <StackPanel>
-                <TextBlock Text="Question"
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="Question"
                            FontWeight="Bold"/>
-                <TextBlock Text="{Binding Query, Mode=TwoWay}"/>
-            </StackPanel>
-        </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+                        <TextBlock Text="{Binding Query, Mode=TwoWay}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Visibility="{Binding DataContext.IsQuestionSideVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
-            
+        <StackPanel Grid.Row="1" Grid.Column="2" Visibility="{Binding DataContext.IsQuestionSideVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
+
             <TextBlock FontWeight="Bold" Margin="20 0 0 0" Text="Question:" />
             <TextBox Margin="20 0 20 20" Height="80" Text="{Binding ActiveQuestion.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
 
                 <TextBlock FontWeight="Bold" Margin="20 0 0 0"  Text="Correct Answer:" />
-                <TextBox Margin="20 0 20 10" Text="{Binding ActiveQuestion.CorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="20 0 20 10" TabIndex="1" Text="{Binding ActiveQuestion.CorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock FontWeight="Bold" Margin="20 0 0 0" Text="First Incorrect Answer:" />
-                <TextBox Margin="20 0 20 10" Text="{Binding ActiveQuestion.IncorrectAnswers[0], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Margin="20 0 20 10" TabIndex="2" Text="{Binding ActiveQuestion.IncorrectAnswers[0], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock FontWeight="Bold" Margin="20 0 0 0" Text="Second Incorrect Answer:" />
-                <TextBox Margin="20 0 20 10" Text="{Binding ActiveQuestion.IncorrectAnswers[1], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="20 0 20 10" TabIndex="3" Text="{Binding ActiveQuestion.IncorrectAnswers[1], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock FontWeight="Bold" Margin="20 0 0 0" Text="Third Incorrect Answer:" />
-                <TextBox Margin="20 0 20 10" Text="{Binding ActiveQuestion.IncorrectAnswers[2], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Margin="20 0 20 10" TabIndex="4" Text="{Binding ActiveQuestion.IncorrectAnswers[2], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                
                 <Button  
+                  FontSize="12"
                   Content="Save"
-                  FontSize="15"
+                  Padding="2"
+                  FontWeight="DemiBold"
                   Width="40" 
-                  Height="20" 
+                  Margin="0,5,0,5"
                   Command="{Binding SaveQuestionCommand}"/>
 
             </StackPanel>
         </StackPanel>
-        
+
     </Grid>
 </UserControl>

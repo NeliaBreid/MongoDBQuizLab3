@@ -24,5 +24,6 @@ namespace QuizLab3.Views
         {
             InitializeComponent();
         }
+
     }
 }

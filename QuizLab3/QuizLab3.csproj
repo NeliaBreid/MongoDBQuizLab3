@@ -9,7 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icon\celebrate.ico" />
     <None Remove="icon\kahoot.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icon\celebrate.ico" />
   </ItemGroup>
 
   <ItemGroup>

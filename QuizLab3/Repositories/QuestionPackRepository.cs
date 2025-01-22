@@ -16,11 +16,9 @@ namespace QuizLab3.Repositories
         public async Task<List<QuestionPack>> GetAllQuestionPacksAsync()
         {
             var packs = await _packsCollection.Find(_ => true).ToListAsync();
-           
             return packs;
 
         }
-
         public async Task AddQuestionPackAsync(QuestionPack newQuestionPack)
         {
              await _packsCollection.InsertOneAsync(newQuestionPack);
@@ -30,7 +28,7 @@ namespace QuizLab3.Repositories
         {
             var filter = Builders<QuestionPack>.Filter.Eq(p => p.Id, updatedPack.Id);
             var existingPack = await _packsCollection.Find(p => p.Id == updatedPack.Id).FirstOrDefaultAsync();
-            // Uppdatera specifika fält istället för att ersätta hela dokumentet
+
             var update = Builders<QuestionPack>.Update
                 .Set(p => p.Name, updatedPack.Name)
                 .Set(p => p.Category, updatedPack.Category)

@@ -14,7 +14,7 @@ namespace QuizLab3.Data
         {
             try
             {
-                var client = new MongoClient("mongodb://localhost:27017");
+                var client = new MongoClient("mongodb://localhost:27017/");
                 _database = client.GetDatabase("CorneliaBreid"); 
 
                 Categories = _database.GetCollection<Category>("Categories");

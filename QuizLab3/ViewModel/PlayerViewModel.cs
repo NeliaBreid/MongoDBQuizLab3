@@ -34,7 +34,7 @@ namespace QuizLab3.ViewModel
             {
                 _areAnswerButtonsEnabled = value;
                 RaisePropertyChanged(nameof(AreAnswerButtonsEnabled));
-                AnswerButtonCommand.RaiseCanExecuteChanged();  // Refresh button state
+                AnswerButtonCommand.RaiseCanExecuteChanged(); 
             }
         }
         public string TimeRemainingDisplay
@@ -110,7 +110,6 @@ namespace QuizLab3.ViewModel
             CountCorrectAnswers = 0;
         }
 
-
         private void Timer_Tick(object? sender, EventArgs e)
         {
             if (TimeRemaining > 0)
@@ -120,16 +119,8 @@ namespace QuizLab3.ViewModel
             else
             {
                 EndGame();
+                
             }
-            //else if(TimeRemaining == 0 && CurrentQuestionIndex == TotalQuestions && CurrentQuestionIndex != 0)
-            //{
-            //    _mainWindowViewModel?.ShowResultView();
-            //}
-            //else if (CurrentQuestionIndex != TotalQuestions)
-            //{
-            //    NextQuestion();
-            //    TimeRemaining = ActivePack?.TimeLimitInSeconds ?? 0;
-            //}
         }
 
         public void ShuffleQuestions()
@@ -177,8 +168,6 @@ namespace QuizLab3.ViewModel
             else if(CurrentQuestionIndex == TotalQuestions)
             {
                 EndGame();
-                //_mainWindowViewModel.ShowResultView();
-                //GameReset();
             }
             else
             {
@@ -230,7 +219,7 @@ namespace QuizLab3.ViewModel
             ShuffleAnswers();
 
             TimeRemaining = ActivePack?.TimeLimitInSeconds ?? 0;
-            AreAnswerButtonsEnabled = true; //
+            AreAnswerButtonsEnabled = true; 
             _timer.Start();
         }
 
@@ -240,6 +229,8 @@ namespace QuizLab3.ViewModel
 
             _currentQuestionIndex = 0;
 
+            _timer.Stop();
+
             TimeRemaining = ActivePack?.TimeLimitInSeconds ?? 0;
 
             CurrentQuestion = ShuffledQuestions.ElementAtOrDefault(_currentQuestionIndex);
@@ -247,10 +238,10 @@ namespace QuizLab3.ViewModel
             RaisePropertyChanged(nameof(CurrentQuestionIndex));
             RaisePropertyChanged(nameof(CountCorrectAnswers));
         }
-        private void EndGame()
+        public void EndGame()
         {
             _timer.Stop();
-            AreAnswerButtonsEnabled = false;  // Disable buttons
+            AreAnswerButtonsEnabled = false; 
             _mainWindowViewModel?.ShowResultView();
         }
 

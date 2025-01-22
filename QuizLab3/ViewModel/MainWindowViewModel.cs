@@ -4,9 +4,7 @@ using QuizLab3.Dialogs;
 using QuizLab3.Model;
 using QuizLab3.Repositories;
 using System.Collections.ObjectModel;
-using System.Data.Common;
 using System.Windows;
-using System.Windows.Input;
 
 namespace QuizLab3.ViewModel
 {
@@ -23,9 +21,8 @@ namespace QuizLab3.ViewModel
         private QuestionPackViewModel? _activePack;
 
         private bool _isPlayerMode = false;
-
-        private bool _isQuestionSideVisible = false;
         private bool _isConfigurationMode = true;
+        private bool _isQuestionSideVisible = false;
 
         public QuestionPackViewModel? ActivePack
         {
@@ -35,17 +32,6 @@ namespace QuizLab3.ViewModel
                 _activePack = value;
                 RaisePropertyChanged(nameof(ActivePack));
                 ConfigurationViewModel?.RaisePropertyChanged();
-
-            }
-        }
-        public bool IsConfigurationMode
-        {
-            get => _isConfigurationMode;
-            set
-            {
-                _isConfigurationMode = value;
-                RaisePropertyChanged(nameof(IsConfigurationMode));
-                RaisePropertyChanged(nameof(IsPlayerMode));
 
             }
         }
@@ -60,17 +46,30 @@ namespace QuizLab3.ViewModel
 
             }
         }
+        public bool IsConfigurationMode
+        {
+            get => _isConfigurationMode;
+            set
+            {
+                _isConfigurationMode = value;
+                RaisePropertyChanged(nameof(IsConfigurationMode));
+                RaisePropertyChanged(nameof(IsPlayerMode));
+
+            }
+        }
 
         public bool IsQuestionSideVisible
         {
             get => _isQuestionSideVisible;
             set
             {
-                _isQuestionSideVisible = value;
-                RaisePropertyChanged(nameof(IsQuestionSideVisible));
+                if (_isQuestionSideVisible != value)
+                {
+                    _isQuestionSideVisible = value;
+                    RaisePropertyChanged(nameof(IsQuestionSideVisible));
+                }
             }
         }
-
         public DelegateCommand NewPackDialog { get; }
         public DelegateCommand PackOptionsDialog { get; }
         public DelegateCommand EditCategoryDialog { get; }
@@ -103,11 +102,13 @@ namespace QuizLab3.ViewModel
             ShowPlayerViewCommand = new DelegateCommand(ShowPlayerView, CanShowPlayerView);
 
             FullScreenCommand = new DelegateCommand(SetFullScreen);
+     
 
             LoadDefaultValues();
             LoadQuestionPacks();
 
         }
+
         public async void LoadQuestionPacks()
         {
             try
@@ -148,7 +149,7 @@ namespace QuizLab3.ViewModel
                 {
                     var defaultPack = DataBaseInitializer.SetDefaultQuestionPack();
                     ActivePack = new QuestionPackViewModel(defaultPack);
-                    Packs.Add(ActivePack); //TODO: Behövs den här?
+                    Packs.Add(ActivePack);
                     ConfigurationViewModel.RemoveQuestionsCommand.RaiseCanExecuteChanged();
                     ConfigurationViewModel.AddQuestionsCommand.RaiseCanExecuteChanged();
                 }
@@ -197,7 +198,7 @@ namespace QuizLab3.ViewModel
 
         private void SetActivePack(object? obj)
         {
-            ActivePack = (QuestionPackViewModel)obj; //TODO: Vad gör den här?
+            ActivePack = (QuestionPackViewModel)obj; 
 
             RaisePropertyChanged(nameof(ActivePack));
         }
@@ -207,10 +208,11 @@ namespace QuizLab3.ViewModel
         }
         private void ShowConfigurationView(object? obj)
         {
+            PlayerViewModel.GameReset();
+
             IsConfigurationMode = true;
             IsPlayerMode = false;
 
-            PlayerViewModel.GameReset();
             ShowConfigurationViewCommand.RaiseCanExecuteChanged();
             ShowPlayerViewCommand.RaiseCanExecuteChanged();
         }

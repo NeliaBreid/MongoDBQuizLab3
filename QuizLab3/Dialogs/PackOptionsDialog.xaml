@@ -9,7 +9,7 @@
         xmlns:model="clr-namespace:QuizLab3.Model"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Pack Options" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
+        Title="Pack Options" Height="325" Width="260" ResizeMode="NoResize" Background="Lavender">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="DifficultyValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -33,7 +33,7 @@
 
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5, 10, 0, 0" Text="Category:" FontWeight="Bold"/>
-                <TextBlock Margin="80 10 5 10" Text="{Binding ActivePack.Category, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Margin="80 10 5 10" Text="{Binding ActivePack.Category, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
             <ComboBox Margin="5 0 5 5"
@@ -65,11 +65,13 @@
                 Value="{Binding ActivePack.TimeLimitInSeconds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <Button  
+            FontSize="12"
             Content="Save"
-            FontSize="15"
             Width="40" 
-            Height="20" 
-            Command="{Binding SaveQuestionPackCommand}"/>
+            Padding="2"
+            FontWeight="DemiBold"
+            Command="{Binding SaveQuestionPackCommand}"
+            Click="Close"/>
 
         </StackPanel>
     </Grid>

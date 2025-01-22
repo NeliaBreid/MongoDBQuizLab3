@@ -8,7 +8,7 @@
         xmlns:model="clr-namespace:QuizLab3.Model"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="New QuestionPack" Height="320" Width="260" ResizeMode="NoResize" Background="Lavender">
+        Title="New QuestionPack" Height="325" Width="260" ResizeMode="NoResize" Background="Lavender">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="DifficultyValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -29,9 +29,9 @@
             
             <Label Content="Category" FontWeight="Bold"/>
             <ComboBox Margin="5 0 5 10"
-          SelectedValue="{Binding NewQuestionPack.Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          SelectedValuePath="Name"
-          ItemsSource="{Binding AllCategories}">
+                     SelectedValue="{Binding NewQuestionPack.Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     SelectedValuePath="Name"
+                     ItemsSource="{Binding AllCategories}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />
@@ -50,19 +50,32 @@
                 TickPlacement="BottomRight"
                 TickFrequency="5"
                 Margin="0 0 0 10"
-
                 Minimum="5"
                 Maximum="120"
                 Value="{Binding NewQuestionPack.TimeLimitInSeconds}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Cancel" Margin="10" HorizontalAlignment="left" Click="Button_Click_1"/>
-                <Button Content="Create" Margin="10" HorizontalAlignment="Right"  Command="{Binding CreateQuestionPacksCommand}" Click="Button_Click"/>
+                <Button 
+                    FontSize="12"
+                    FontWeight="DemiBold"
+                    Padding="2"
+                    Content="Cancel" 
+                    Margin="10" 
+                    HorizontalAlignment="left" 
+                    Click="Button_Click_1"/>
+                <Button 
+                    FontSize="12"
+                    FontWeight="DemiBold"
+                    Padding="2"
+                    Content="Create" 
+                    Margin="10" 
+                    HorizontalAlignment="Right"  
+                    Command="{Binding CreateQuestionPacksCommand}" 
+                    Click="Button_Click"/>
             </StackPanel>
 
         </StackPanel>
-
 
     </Grid>
 </Window>

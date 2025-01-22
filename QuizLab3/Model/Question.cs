@@ -7,7 +7,7 @@ namespace QuizLab3.Model
     {
 
         [BsonElement("questionId")]
-        public string QuestionId { get; set; } = ObjectId.GenerateNewId().ToString();
+        public string QuestionId { get; set; }
 
         [BsonElement("query")]
         public string Query { get; set; }

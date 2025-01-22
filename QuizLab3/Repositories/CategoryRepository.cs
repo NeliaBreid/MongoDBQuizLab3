@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using QuizLab3.Data;
 using QuizLab3.Model;
+using QuizLab3.ViewModel;
 
 namespace QuizLab3.Repositories
 {
@@ -33,7 +34,7 @@ namespace QuizLab3.Repositories
                await _categoriesCollection.DeleteOneAsync(filter);
             }
         }
-        public async Task UpdateCategory(Category category) //Uppdatera kategorin, Om den finns, matchat på Id så updaterar den existerande
+        public async Task UpdateCategory(Category category) 
         {
             var existingCategory = await _categoriesCollection.Find(c => c.Id == category.Id).FirstOrDefaultAsync();
 

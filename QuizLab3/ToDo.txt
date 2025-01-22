@@ -1,5 +1,0 @@
-﻿To do:
-- Flytta ut till en QuestionViewModel
-- Kolla över variabelnamn
-- Kolla över funktionnamn
-- Flytta om funktioner och variabler
