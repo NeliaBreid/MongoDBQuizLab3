@@ -16,6 +16,3 @@ A timer counts down (the time limit per question can be set during pack configur
 
 ## Menu
 The menu includes icons for the various options (e.g., using Font Awesome). Menu options can also be activated using keyboard shortcuts or the Alt key, such as Ctrl+O or Alt+E (O for "Pack Options").
-
-##Full Screen
-There should be a menu option to run the program in full-screen mode.
