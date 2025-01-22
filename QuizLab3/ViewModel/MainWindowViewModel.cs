@@ -61,6 +61,18 @@ namespace QuizLab3.ViewModel
 
             }
         }
+        private bool _isQuestionSideVisible = false;
+
+        public bool IsQuestionSideVisible
+        {
+            get => _isQuestionSideVisible;
+            set
+            {
+                _isQuestionSideVisible = value;
+                RaisePropertyChanged(nameof(IsQuestionSideVisible));
+            }
+        }
+
         public DelegateCommand NewPackDialog { get; }
         public DelegateCommand PackOptionsDialog { get; }
         public DelegateCommand EditCategoryDialog { get; }

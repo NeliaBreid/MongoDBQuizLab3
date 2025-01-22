@@ -65,6 +65,7 @@ namespace QuizLab3.ViewModel
              set 
             {
                 _activeQuestion = value;
+                mainWindowViewModel.IsQuestionSideVisible = _activeQuestion != null;
                 RaisePropertyChanged();
             }
         }
@@ -176,6 +177,7 @@ namespace QuizLab3.ViewModel
                 await _questionRepository.UpdateQuestionInDbAsync(ActivePack.Id, newQuestion);//Ska uppdatera frågan eller lägga till den
                 mainWindowViewModel.LoadQuestionsInPack(); //Laddar om frågorna
 
+          
             }
         }
         private bool CanAddQuestionToActivePack(object parameter)

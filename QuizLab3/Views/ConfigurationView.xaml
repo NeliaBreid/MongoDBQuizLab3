@@ -9,8 +9,11 @@
              DataContext="{Binding ConfigurationViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
 
-    <Grid>
+            <Grid>
         
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -87,7 +90,7 @@
         </ListBox.ItemTemplate>
     </ListBox>
 
-        <StackPanel Grid.Row="2" Grid.Column="1">
+        <StackPanel Grid.Row="2" Grid.Column="1" Visibility="{Binding DataContext.IsQuestionSideVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
             
             <TextBlock FontWeight="Bold" Margin="20 0 0 0" Text="Question:" />
             <TextBox Margin="20 0 20 20" Height="80" Text="{Binding ActiveQuestion.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
