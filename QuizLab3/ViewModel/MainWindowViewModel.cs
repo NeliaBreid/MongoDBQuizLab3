@@ -24,6 +24,7 @@ namespace QuizLab3.ViewModel
 
         private bool _isPlayerMode = false;
 
+        private bool _isQuestionSideVisible = false;
         private bool _isConfigurationMode = true;
 
         public QuestionPackViewModel? ActivePack
@@ -34,8 +35,6 @@ namespace QuizLab3.ViewModel
                 _activePack = value;
                 RaisePropertyChanged(nameof(ActivePack));
                 ConfigurationViewModel?.RaisePropertyChanged();
-                ConfigurationViewModel?.RemoveQuestionsCommand.RaiseCanExecuteChanged();
-
 
             }
         }
@@ -61,7 +60,6 @@ namespace QuizLab3.ViewModel
 
             }
         }
-        private bool _isQuestionSideVisible = false;
 
         public bool IsQuestionSideVisible
         {
@@ -80,7 +78,6 @@ namespace QuizLab3.ViewModel
         public DelegateCommand ShowConfigurationViewCommand { get; }
         public DelegateCommand ShowPlayerViewCommand { get; }
         public DelegateCommand FullScreenCommand { get; }
-
 
         public MainWindowViewModel()
         {
@@ -113,38 +110,53 @@ namespace QuizLab3.ViewModel
         }
         public async void LoadQuestionPacks()
         {
-            Packs.Clear();
-            var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
-
-            if (!questionPacks.Any())
+            try
             {
-                return;
+                Packs.Clear();
+                var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
+
+                if (!questionPacks.Any())
+                {
+                    return;
+                }
+
+                var loadedPacks = new ObservableCollection<QuestionPackViewModel>(
+                    questionPacks.Select(pack => new QuestionPackViewModel(pack)));
+
+                foreach (var pack in loadedPacks)
+                {
+                    Packs.Add(pack);
+                }
+
+                ActivePack = Packs.First();
+                LoadQuestionsInPack();
             }
-
-            var loadedPacks = new ObservableCollection<QuestionPackViewModel>(
-                questionPacks.Select(pack => new QuestionPackViewModel(pack))); 
-
-            foreach (var pack in loadedPacks) 
+            catch (Exception ex)
             {
-                Packs.Add(pack);
+                MessageBox.Show($"An error occurred while loading the question packs: {ex.Message}",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            ActivePack = Packs.First();
-            LoadQuestionsInPack();
-
         }
         public async void LoadDefaultValues()
         {
-            var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
-
-            if (!questionPacks.Any())
+            try
             {
-                var defaultPack = DataBaseInitializer.SetDefaultQuestionPack();
-                ActivePack = new QuestionPackViewModel(defaultPack); 
-                Packs.Add(ActivePack); //TODO: Behövs den här?
-                ConfigurationViewModel.RemoveQuestionsCommand.RaiseCanExecuteChanged();
-                ConfigurationViewModel.AddQuestionsCommand.RaiseCanExecuteChanged();
 
+                var questionPacks = await _questionPackRepository.GetAllQuestionPacksAsync();
+
+                if (!questionPacks.Any())
+                {
+                    var defaultPack = DataBaseInitializer.SetDefaultQuestionPack();
+                    ActivePack = new QuestionPackViewModel(defaultPack);
+                    Packs.Add(ActivePack); //TODO: Behövs den här?
+                    ConfigurationViewModel.RemoveQuestionsCommand.RaiseCanExecuteChanged();
+                    ConfigurationViewModel.AddQuestionsCommand.RaiseCanExecuteChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading the default questionpacks,{ex.Message}", 
+                       "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -202,7 +214,6 @@ namespace QuizLab3.ViewModel
             ShowConfigurationViewCommand.RaiseCanExecuteChanged();
             ShowPlayerViewCommand.RaiseCanExecuteChanged();
         }
-
         private void ShowPlayerView(object? obj)
         {
             IsConfigurationMode = false;

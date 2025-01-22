@@ -23,14 +23,14 @@
                Content="{Binding TimeRemainingDisplay,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Height="89" Grid.ColumnSpan="2" Margin="50 80 50 50" Width="419">
-            <TextBlock HorizontalAlignment="Center" FontSize="30" Text="{Binding CurrentQuestion.Query}"></TextBlock>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Question "/>
+            <TextBlock HorizontalAlignment="Center" FontSize="20" Text="{Binding CurrentQuestion.Query}" TextWrapping="Wrap"></TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                <TextBlock Text="Question " />
                 <TextBlock Text="{Binding CurrentQuestionIndex, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 <TextBlock Text=" out of "/>
                 <TextBlock Text="{Binding TotalQuestions}"></TextBlock>
-                
             </StackPanel>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="Correct Questions: "/>
                 <TextBlock Text="{Binding CountCorrectAnswers, UpdateSourceTrigger=PropertyChanged}"/>

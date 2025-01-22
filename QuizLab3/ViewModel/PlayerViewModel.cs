@@ -22,8 +22,6 @@ namespace QuizLab3.ViewModel
 
         private int _timeRemaining;
 
-        private int _totalQuestions;
-
         private int _currentQuestionIndex; 
 
         private Question _currentQuestion; 

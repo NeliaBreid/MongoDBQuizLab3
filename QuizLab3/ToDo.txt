@@ -1,6 +1,5 @@
 ﻿To do:
 - Flytta ut till en QuestionViewModel
-- Lägg till Try Catch i databashantering
 - Kolla över variabelnamn
 - Kolla över funktionnamn
 - Flytta om funktioner och variabler

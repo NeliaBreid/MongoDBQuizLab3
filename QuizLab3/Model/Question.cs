@@ -18,17 +18,6 @@ namespace QuizLab3.Model
         [BsonElement("incorrectAnswers")]
         public string[] IncorrectAnswers { get; set; }
         
-        public Question() //Måste ha när man skapar ny fråga
-        {
-
-        }
-        //public Question(string query, string correctAnswer, string[] incorrectAnswers) 
-        //{
-        //    QuestionId = ObjectId.GenerateNewId().ToString();
-        //    Query = query;
-        //    CorrectAnswer = correctAnswer;
-        //    IncorrectAnswers = incorrectAnswers;
-        //}
         public Question(string query, string correctAnswer, string incorrectAnswer1, string incorrectAnswer2, string incorrectAnswer3)
         {
             QuestionId = ObjectId.GenerateNewId().ToString();

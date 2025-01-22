@@ -26,8 +26,7 @@ namespace QuizLab3.Repositories
              await _packsCollection.InsertOneAsync(newQuestionPack);
         }
 
-        public async Task UpdateQuestionPackInDbAsync(QuestionPack updatedPack) //Den här fungerar inte eftersom jag skapar som ett nytt pack kan
-            // jag inte jämföra id för det nya packet har noll i id. Försök istället ta det befintliga packet och bara uppdatera det.
+        public async Task UpdateQuestionPackInDbAsync(QuestionPack updatedPack)
         {
             var filter = Builders<QuestionPack>.Filter.Eq(p => p.Id, updatedPack.Id);
             var existingPack = await _packsCollection.Find(p => p.Id == updatedPack.Id).FirstOrDefaultAsync();

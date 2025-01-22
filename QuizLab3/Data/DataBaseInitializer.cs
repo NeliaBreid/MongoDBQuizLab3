@@ -21,9 +21,9 @@ namespace QuizLab3.Data
                 var sportCategory = new Category("Sport");
 
                 // Insert a new category
-                context.Categories.InsertOne(animalCategory); //TODO: insertmany istället?
-                context.Categories.InsertOne(musicCategory);
-                context.Categories.InsertOne(sportCategory);
+                context?.Categories.InsertOne(animalCategory); //TODO: insertmany istället?
+                context?.Categories.InsertOne(musicCategory);
+                context?.Categories.InsertOne(sportCategory);
             }
         }
 
@@ -45,23 +45,24 @@ namespace QuizLab3.Data
                     Questions = new List<Question>
                     {
                          new Question
-                        {
-                            Query = "Vilket djur är störst?",
-                            CorrectAnswer = "Blåval",
-                            IncorrectAnswers = new[] { "Elefant", "Giraff", "Noshörning" }
-                        },
+                        (
+                             "Vilket djur är störst?",
+                            "Blåval",
+                             "Elefant", "Giraff", "Noshörning" 
+                        )
+                        ,
                         new Question
-                        {
-                            Query = "Vilket instrument har sex strängar?",
-                            CorrectAnswer = "Gitarr",
-                            IncorrectAnswers = new[] { "Fiol", "Bas", "Piano" }
-                        },
+                        (
+                            "Vilket instrument har sex strängar?",
+                           "Gitarr",
+                             "Fiol", "Bas", "Piano" 
+                        ),
                         new Question
-                        {
-                            Query = "Hur många spelare finns i ett fotbollslag?",
-                            CorrectAnswer = "11",
-                            IncorrectAnswers = new[] { "9", "10", "12" }
-                        }
+                        (
+                            "Hur många spelare finns i ett fotbollslag?",
+                            "11",
+                             "9", "10", "12" 
+                        )
                     }                
                 
                 };
