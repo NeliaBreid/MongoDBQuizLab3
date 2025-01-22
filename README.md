@@ -1,24 +1,21 @@
-# Labb 3 - Quiz Configurator
+## Lab 3 - Quiz Configurator
+I have developed an application for configuring quiz questions and running quiz rounds. The app is built in WPF and XAML, following the Model-View-ViewModel (MVVM) architecture. The application primarily consists of two parts: a "configurator" for creating question packs and a "player" for running quiz rounds.
 
-Jag har byggt en applikation för att konfigurera quiz-frågor och köra quiz-rundor. Appen är skriven i WPF och XAML och byggas på Model-View-ViewModel (MVVM)-arkitektur. Appen består i huvudsak av två delar ,en “configurator” för att skapa paket med frågor; och en “player” där man kan köra quiz-rundor.
-
+## MongoDb
+When you run the application the app will create a codefirst-database which you can see if you have MongoDbCompass on your desktop.
 
 ## Configuration Mode
+You can create "Question Packs," i.e., packages of questions. You can add, remove, and edit existing questions. All questions have four options, with one being correct. You can also adjust settings for the packs themselves under "Pack Options": choose a name, tag the pack with a difficulty level, and set a time limit for the questions. Additionally, you can create new packs and delete existing ones.
 
-Man kan bygga “Question Packs”, det vill säga “paket” med frågor. Man kan lägga till, ta bort, och redigera befintliga frågor. Alla frågor har fyra alternativ, varav ett korrekt. Man kan även ändra inställningar för själva paketet “Pack Options”: Välja namn, märka upp med svårighetsgrad, samt sätta tidsgräns på frågorna. Man kan även skapa nya “Packs”, och ta bort befintliga.
-
-Det går att lägga till / ta bort frågor på flera sätt: Via menyn, Via snabbknappar på tangentbordet, och via knappar i appen. Även “Pack Options” går att öppna på alla 3 sätt.
-
+There are multiple ways to add/remove questions: via the menu, through keyboard shortcuts, and using buttons in the app. The "Pack Options" menu can also be opened using all three methods.
 
 ## Play Mode
+When starting Play Mode, the app displays how many questions are in the active "Question Pack" and which question is currently being answered in sequence. You can answer all the questions in the pack before receiving a result that shows how many were answered correctly. The order in which the questions are displayed is randomized each time, as is the order of the answer options.
 
-När man startar play mode visar hur många frågor det är i det aktiva “Frågepaketet”, samt vilken fråga man är på i turordning. Man kan alltså svara på alla frågor i paketet innan man får ett resultat som visar hur många rätt man hade. Ordningen frågorna visas i ska dock slumpas från gång till gång; likadant med ordningen som svarsalternativen visas i. Det finns en timer som räknar ner (betänketid per fråga ska gå att ställa in när man konfigurerar packen), och efter man klickat på ett svar (eller tiden tar slut) får användaren feedback på om man svarat rätt/fel, samt vilket det korrekta svarsalternativet är.
+A timer counts down (the time limit per question can be set during pack configuration). After selecting an answer (or if time runs out), the user receives feedback on whether their answer was correct/incorrect, along with the correct answer.
 
+## Menu
+The menu includes icons for the various options (e.g., using Font Awesome). Menu options can also be activated using keyboard shortcuts or the Alt key, such as Ctrl+O or Alt+E (O for "Pack Options").
 
-## Menyn
-
-Menyn har ikoner för de olika alternativen (t.ex med font-awesome). Menyalternativen går att aktivera från tangentbordet både med snabbvalsknappar, och med alt-knappen, till exempel Ctrl+O, samt Alt+E, O för “Pack Options”.
-
-## **Full Screen**
-
-Det ska finnas ett menyalternativ för att köra programmet i helskärmsläge.
+##Full Screen
+There should be a menu option to run the program in full-screen mode.
